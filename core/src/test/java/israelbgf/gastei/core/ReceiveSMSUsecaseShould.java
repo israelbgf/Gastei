@@ -3,10 +3,12 @@ package israelbgf.gastei.core;
 import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 import israelbgf.gastei.core.usecases.ReceiveSMSUsecase;
+import israelbgf.gastei.core.utils.ExpenseFactory;
 import org.junit.After;
 import org.junit.Test;
 
 import static israelbgf.gastei.core.utils.DateUtils.createDate;
+import static israelbgf.gastei.core.utils.ExpenseFactory.sampleExpense;
 import static org.mockito.Mockito.*;
 
 public class ReceiveSMSUsecaseShould {
@@ -24,11 +26,7 @@ public class ReceiveSMSUsecaseShould {
     public void storeExpenseWhenParseValidSMS() {
         usecase.execute(VALID_NUMBER, SMS_CONTENT);
 
-        Expense expectedExpense = new Expense(
-                156.47,
-                "GIASSI SUPERMERCADOS LOJAJOINVILLE",
-                createDate(2015, 9, 26, 13, 46));
-
+        Expense expectedExpense = sampleExpense();
         verify(presenter).presentNewExpenseAdded(expectedExpense);
         verify(gateway).save(expectedExpense);
     }
