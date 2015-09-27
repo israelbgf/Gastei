@@ -3,17 +3,17 @@ package israelbgf.gastei.core;
 import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 import israelbgf.gastei.core.usecases.ReceiveSMSUsecase;
-import israelbgf.gastei.core.utils.ExpenseFactory;
 import org.junit.After;
 import org.junit.Test;
 
-import static israelbgf.gastei.core.utils.DateUtils.createDate;
 import static israelbgf.gastei.core.utils.ExpenseFactory.sampleExpense;
 import static org.mockito.Mockito.*;
 
 public class ReceiveSMSUsecaseShould {
 
-    private static final String VALID_NUMBER = "2788";
+    private static final String INVALID_NUMBER = "9999";
+
+
     public static final String SMS_CONTENT = "BRADESCO CARTOES:COMPRA APROVADA NO CARTAO FINAL 9999 EM " +
             "26/09/2015 13:46. VALOR DE $ 156,47 NO(A) GIASSI SUPERMERCADOS LOJAJOINVILLE";
     public static final String INVALID_SMS_CONTENT = "MENSAGEM ERRADA";
@@ -24,7 +24,7 @@ public class ReceiveSMSUsecaseShould {
 
     @Test
     public void storeExpenseWhenParseValidSMS() {
-        usecase.execute(VALID_NUMBER, SMS_CONTENT);
+        usecase.receive(ReceiveSMSUsecase.BRADESCO_SMS_NUMBER, SMS_CONTENT);
 
         Expense expectedExpense = sampleExpense();
         verify(presenter).presentNewExpenseAdded(expectedExpense);
@@ -33,13 +33,18 @@ public class ReceiveSMSUsecaseShould {
 
     @Test
     public void notifyErrorWhenParseInvalidSMS() {
-        usecase.execute(VALID_NUMBER, INVALID_SMS_CONTENT);
+        usecase.receive(ReceiveSMSUsecase.BRADESCO_SMS_NUMBER, INVALID_SMS_CONTENT);
 
         verify(presenter).presentInvalidSMSContent(INVALID_SMS_CONTENT);
     }
 
+    @Test
+    public void ignoreWhenInvalidNumber() {
+        usecase.receive(INVALID_NUMBER, null);
+    }
+
     @After
-    public void after(){
+    public void after() {
         verifyNoMoreInteractions(gateway, presenter);
     }
 

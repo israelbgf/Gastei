@@ -22,7 +22,7 @@ public class SmsReceiver extends BroadcastReceiver {
             String phoneNumber = currentMessage.getDisplayOriginatingAddress();
             String message = currentMessage.getDisplayMessageBody();
 
-            ReceiveSMSUsecaseFactory.make().execute(phoneNumber, message);
+            ReceiveSMSUsecaseFactory.make().receive(phoneNumber, message);
         }
     }
 }

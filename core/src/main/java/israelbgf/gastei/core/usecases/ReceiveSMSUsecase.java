@@ -13,6 +13,7 @@ import static java.lang.Double.parseDouble;
 
 public class ReceiveSMSUsecase {
 
+    public static final String BRADESCO_SMS_NUMBER = "2788";
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.getDefault());
     private final ExpenseGateway gateway;
     private Presenter presenter;
@@ -22,7 +23,10 @@ public class ReceiveSMSUsecase {
         this.presenter = presenter;
     }
 
-    public void execute(String phoneNumber, String smsContent) {
+    public void receive(String phoneNumber, String smsContent) {
+        if(isNotBradescoSMSNumber(phoneNumber))
+            return;
+
         try {
             Expense newExpense = parseExpenseFrom(smsContent);
             gateway.save(newExpense);
@@ -30,6 +34,10 @@ public class ReceiveSMSUsecase {
         } catch (InvalidSMSException e) {
             presenter.presentInvalidSMSContent(smsContent);
         }
+    }
+
+    private boolean isNotBradescoSMSNumber(String phoneNumber) {
+        return !phoneNumber.equals(BRADESCO_SMS_NUMBER);
     }
 
     private Expense parseExpenseFrom(String message) {

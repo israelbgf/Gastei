@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Expense {
-    private final double amount;
-    private final String local;
-    private Date date;
+    public final double amount;
+    public final String local;
+    public Date date;
 
     public Expense(double amount, String local, Date date) {
         this.amount = amount;
