@@ -6,6 +6,9 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import israelbgf.gastei.core.entities.Expense;
 
+import java.util.Date;
+import java.util.List;
+
 import static israelbgf.gastei.core.utils.DateUtils.createDate;
 
 public class ExpenseGatewayRealmShould extends ApplicationTestCase<Application> {
@@ -37,6 +40,22 @@ public class ExpenseGatewayRealmShould extends ApplicationTestCase<Application> 
         assertEquals(expense.amount, storedExpense.getAmount());
         assertEquals(expense.date.getTime(), storedExpense.getDate().getTime(), 1000);
         assertEquals(expense.local, storedExpense.getLocal());
+
+    }
+
+    public void testRetrieveExpenseByMonth() {
+        Date january = createDate(2015, 1);
+        Date februrary = createDate(2015, 2);
+        gateway.save(new Expense(10, "Giassi", january));
+        gateway.save(new Expense(20, "Wallmart", februrary));
+
+        List<Expense> expenses = gateway.retrieveByMonth(january);
+
+        assertEquals(1, expenses.size());
+        Expense storedExpense = expenses.get(0);
+        assertEquals(10.0, storedExpense.amount);
+        assertEquals("Giassi", storedExpense.local);
+        assertEquals(january.getTime(), storedExpense.date.getTime(), 1000);
 
     }
 
