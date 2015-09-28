@@ -1,6 +1,6 @@
 package israelbgf.gastei.core;
 
-import israelbgf.gastei.core.entities.Expense;
+import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 import israelbgf.gastei.core.usecases.ListMonthlyExpensesUsecase;
 import org.junit.After;
@@ -23,14 +23,14 @@ public class ListMonthlyExpensesUsecaseShould {
     @Test
     public void listAllWithTheirTotalWhenExpensesExistsForGivenMonth() {
         Date january = createDate(2015, 1);
-        Expense firstJanuaryExpense = expense(10, january);
-        Expense secondJanuaryExpense = expense(20, january);
-        List<Expense> expenses = asList(firstJanuaryExpense, secondJanuaryExpense);
+        ExpenseEntity firstJanuaryExpense = expense(10, january);
+        ExpenseEntity secondJanuaryExpense = expense(20, january);
+        List<ExpenseEntity> expenses = asList(firstJanuaryExpense, secondJanuaryExpense);
         when(gateway.retrieveByMonth(january)).thenReturn(expenses);
 
         usecase.list(january);
 
-        verify(presenter).presentExpenses(expenses, firstJanuaryExpense.amount + secondJanuaryExpense.amount);
+        verify(presenter).presentExpenses(expenses, firstJanuaryExpense.getAmount() + secondJanuaryExpense.getAmount());
     }
 
 

@@ -1,10 +1,10 @@
-package israelbgf.gastei.mobile;
+package israelbgf.gastei.mobile.gateways;
 
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import israelbgf.gastei.core.entities.Expense;
+import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
+import israelbgf.gastei.mobile.gateways.realm.ExpenseRealm;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,22 +19,22 @@ public class ExpenseGatewayRealm implements ExpenseGateway{
     }
 
     @Override
-    public void save(Expense expense) {
+    public void save(ExpenseEntity expense) {
         realm.beginTransaction();
         ExpenseRealm expenseRealm = realm.createObject(ExpenseRealm.class);
-        expenseRealm.setAmount(expense.amount);
-        expenseRealm.setDate(expense.date);
-        expenseRealm.setLocal(expense.local);
+        expenseRealm.setAmount(expense.getAmount());
+        expenseRealm.setDate(expense.getDate());
+        expenseRealm.setPlace(expense.getPlace());
         realm.commitTransaction();
     }
 
     @Override
-    public List<Expense> retrieveByMonth(Date month) {
+    public List<ExpenseEntity> retrieveByMonth(Date month) {
         RealmResults<ExpenseRealm> results = realm.where(ExpenseRealm.class).equalTo("date", month).findAll();
 
-        List<Expense> expenses = new ArrayList<>();
+        List<ExpenseEntity> expenses = new ArrayList<>();
         for(ExpenseRealm expenseRealm : results){
-            expenses.add(new Expense(expenseRealm.getAmount(), expenseRealm.getLocal(), expenseRealm.getDate()));
+            expenses.add(new ExpenseEntity(expenseRealm.getAmount(), expenseRealm.getPlace(), expenseRealm.getDate()));
         }
 
         return expenses;

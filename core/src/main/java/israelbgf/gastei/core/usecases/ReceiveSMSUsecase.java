@@ -1,6 +1,6 @@
 package israelbgf.gastei.core.usecases;
 
-import israelbgf.gastei.core.entities.Expense;
+import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 
 import java.text.ParseException;
@@ -28,7 +28,7 @@ public class ReceiveSMSUsecase {
             return;
 
         try {
-            Expense newExpense = parseExpenseFrom(smsContent);
+            ExpenseEntity newExpense = parseExpenseFrom(smsContent);
             gateway.save(newExpense);
             presenter.presentNewExpenseAdded(newExpense);
         } catch (InvalidSMSException e) {
@@ -40,7 +40,7 @@ public class ReceiveSMSUsecase {
         return !phoneNumber.equals(BRADESCO_SMS_NUMBER);
     }
 
-    private Expense parseExpenseFrom(String message) {
+    private ExpenseEntity parseExpenseFrom(String message) {
         Pattern pattern = Pattern.compile(".*EM\\s(.*)\\$\\s(.*)\\sNO\\(A\\)\\s(.*)");
         Matcher matcher = pattern.matcher(message);
 
@@ -50,7 +50,7 @@ public class ReceiveSMSUsecase {
             String local = matcher.group(3);
 
             try {
-                return new Expense(parseDouble(amount), local, formatter.parse(date));
+                return new ExpenseEntity(parseDouble(amount), local, formatter.parse(date));
             } catch (ParseException e) {
                 throw new InvalidSMSException();
             }
@@ -67,6 +67,6 @@ public class ReceiveSMSUsecase {
 
         void presentInvalidSMSContent(String invalidSmsContent);
 
-        void presentNewExpenseAdded(Expense expenseAdded);
+        void presentNewExpenseAdded(ExpenseEntity expenseAdded);
     }
 }

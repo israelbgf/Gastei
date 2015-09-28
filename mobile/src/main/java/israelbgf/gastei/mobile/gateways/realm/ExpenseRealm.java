@@ -1,4 +1,4 @@
-package israelbgf.gastei.mobile;
+package israelbgf.gastei.mobile.gateways.realm;
 
 import io.realm.RealmObject;
 
@@ -8,7 +8,7 @@ public class ExpenseRealm extends RealmObject {
 
     private double amount;
     private Date date;
-    private String local;
+    private String place;
 
     public double getAmount() {
         return amount;
@@ -26,11 +26,11 @@ public class ExpenseRealm extends RealmObject {
         this.date = date;
     }
 
-    public String getLocal() {
-        return local;
+    public String getPlace() {
+        return place;
     }
 
-    public void setLocal(String local) {
-        this.local = local;
+    public void setPlace(String place) {
+        this.place = place;
     }
 }

@@ -1,6 +1,6 @@
 package israelbgf.gastei.core;
 
-import israelbgf.gastei.core.entities.Expense;
+import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 import israelbgf.gastei.core.usecases.ReceiveSMSUsecase;
 import org.junit.After;
@@ -26,7 +26,7 @@ public class ReceiveSMSUsecaseShould {
     public void storeExpenseWhenParseValidSMS() {
         usecase.receive(ReceiveSMSUsecase.BRADESCO_SMS_NUMBER, SMS_CONTENT);
 
-        Expense expectedExpense = sampleExpense();
+        ExpenseEntity expectedExpense = sampleExpense();
         verify(presenter).presentNewExpenseAdded(expectedExpense);
         verify(gateway).save(expectedExpense);
     }

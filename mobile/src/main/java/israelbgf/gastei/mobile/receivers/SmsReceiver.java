@@ -1,10 +1,11 @@
-package israelbgf.gastei.mobile;
+package israelbgf.gastei.mobile.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import israelbgf.gastei.mobile.factories.ReceiveSMSUsecaseFactory;
 
 public class SmsReceiver extends BroadcastReceiver {
 

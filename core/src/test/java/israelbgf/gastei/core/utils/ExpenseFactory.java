@@ -1,6 +1,6 @@
 package israelbgf.gastei.core.utils;
 
-import israelbgf.gastei.core.entities.Expense;
+import israelbgf.gastei.core.entities.ExpenseEntity;
 
 import java.util.Date;
 
@@ -11,16 +11,16 @@ public class ExpenseFactory {
     public static final Date GIVEN_DATE = createDate(2015, 9, 26, 13, 46);
     public static final String GIVEN_PLACE = "Whathever Place";
 
-    public static Expense expense(float amount, Date date){
-        return new Expense(
+    public static ExpenseEntity expense(float amount, Date date){
+        return new ExpenseEntity(
                 amount,
                 GIVEN_PLACE,
                 date);
 
     }
 
-    public static Expense sampleExpense(){
-        return new Expense(
+    public static ExpenseEntity sampleExpense(){
+        return new ExpenseEntity(
                 156.47,
                 "GIASSI SUPERMERCADOS LOJAJOINVILLE",
                 createDate(2015, 9, 26, 13, 46));

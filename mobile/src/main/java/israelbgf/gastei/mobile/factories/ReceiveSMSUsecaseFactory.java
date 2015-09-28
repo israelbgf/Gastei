@@ -1,4 +1,4 @@
-package israelbgf.gastei.mobile;
+package israelbgf.gastei.mobile.factories;
 
 import israelbgf.gastei.core.usecases.ReceiveSMSUsecase;
 

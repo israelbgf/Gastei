@@ -1,6 +1,6 @@
 package israelbgf.gastei.core.usecases;
 
-import israelbgf.gastei.core.entities.Expense;
+import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 
 import java.util.Date;
@@ -16,19 +16,19 @@ public class ListMonthlyExpensesUsecase {
     }
 
     public void list(Date monthRestriction) {
-        List<Expense> expenses = gateway.retrieveByMonth(monthRestriction);
+        List<ExpenseEntity> expenses = gateway.retrieveByMonth(monthRestriction);
         presenter.presentExpenses(expenses, totalAmount(expenses));
     }
 
-    private double totalAmount(List<Expense> expenses) {
+    private double totalAmount(List<ExpenseEntity> expenses) {
         float totalAmount = 0;
-        for(Expense expense: expenses){
-            totalAmount += expense.amount;
+        for(ExpenseEntity expense: expenses){
+            totalAmount += expense.getAmount();
         }
         return totalAmount;
     }
 
     public interface Presenter {
-        void presentExpenses(List<Expense> expenses, double totalAmount);
+        void presentExpenses(List<ExpenseEntity> expenses, double totalAmount);
     }
 }
