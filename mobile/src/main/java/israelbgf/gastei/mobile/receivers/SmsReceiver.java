@@ -13,17 +13,17 @@ public class SmsReceiver extends BroadcastReceiver {
         final Bundle bundle = intent.getExtras();
         if (bundle != null) {
             Object[] rawMessages = (Object[]) bundle.get("pdus");
-            parseSmsMessages(rawMessages);
+            parseSmsMessages(context, rawMessages);
         }
     }
 
-    private void parseSmsMessages(Object[] rawMessages) {
+    private void parseSmsMessages(Context context, Object[] rawMessages) {
         for (Object rawMessage : rawMessages) {
             SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) rawMessage);
             String phoneNumber = currentMessage.getDisplayOriginatingAddress();
             String message = currentMessage.getDisplayMessageBody();
 
-            ReceiveSMSUsecaseFactory.make().receive(phoneNumber, message);
+            ReceiveSMSUsecaseFactory.make(context).receive(phoneNumber, message);
         }
     }
 }
