@@ -4,19 +4,31 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static java.util.Calendar.DAY_OF_MONTH;
 import static java.util.Calendar.SECOND;
 
 public class DateUtils {
 
-    public static Date createDate(int year, int month){
-        return createDate(year, month, 1, 0, 0);
+    public static Date date(int year, int month){
+        return date(year, month, 1, 0, 0);
     }
 
-    public static Date createDate(int year, int month, int day, int hour, int minutes){
+    public static Date date(int year, int month, int day, int hour, int minutes){
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.set(year, month - 1, day, hour, minutes);
         calendar.set(SECOND, 0);
         return calendar.getTime();
+    }
+
+    public static Date lastDayOf(int year, int month) {
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(firstDayOf(year, month));
+        calendar.set(DAY_OF_MONTH, calendar.getActualMaximum(DAY_OF_MONTH));
+        return calendar.getTime();
+    }
+
+    public static Date firstDayOf(int year, int month) {
+        return date(year, month);
     }
 
 }

@@ -5,13 +5,12 @@ import android.test.ApplicationTestCase;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import israelbgf.gastei.core.entities.ExpenseEntity;
+import israelbgf.gastei.core.utils.DateUtils;
 import israelbgf.gastei.mobile.gateways.ExpenseGatewayRealm;
 import israelbgf.gastei.mobile.gateways.realm.ExpenseRealm;
 
 import java.util.Date;
 import java.util.List;
-
-import static israelbgf.gastei.core.utils.DateUtils.createDate;
 
 public class ExpenseGatewayRealmShould extends ApplicationTestCase<Application> {
 
@@ -32,7 +31,7 @@ public class ExpenseGatewayRealmShould extends ApplicationTestCase<Application> 
     }
 
     public void testExpensePersistence() {
-        ExpenseEntity expense = new ExpenseEntity(20, "Giassi", createDate(2015, 12));
+        ExpenseEntity expense = new ExpenseEntity(20, "Giassi", DateUtils.date(2015, 12));
 
         gateway.save(expense);
 
@@ -46,12 +45,12 @@ public class ExpenseGatewayRealmShould extends ApplicationTestCase<Application> 
     }
 
     public void testRetrieveExpenseByMonth() {
-        Date january = createDate(2015, 1);
-        Date februrary = createDate(2015, 2);
+        Date january = DateUtils.date(2015, 1);
+        Date februrary = DateUtils.date(2015, 2);
         gateway.save(new ExpenseEntity(10, "Giassi", january));
         gateway.save(new ExpenseEntity(20, "Wallmart", februrary));
 
-        List<ExpenseEntity> expenses = gateway.retrieveByMonth(january);
+        List<ExpenseEntity> expenses = gateway.retrieveByMonth(2015, 1);
 
         assertEquals(1, expenses.size());
         ExpenseEntity storedExpense = expenses.get(0);

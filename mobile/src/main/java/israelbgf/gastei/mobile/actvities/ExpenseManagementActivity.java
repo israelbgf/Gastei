@@ -4,13 +4,10 @@ import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.Toast;
+import israelbgf.gastei.core.usecases.ListMonthlyExpensesUsecase;
 import israelbgf.gastei.mobile.R;
-
-import java.util.Arrays;
-import java.util.List;
+import israelbgf.gastei.mobile.factories.ListMonthlyExpensesUsecaseFactory;
 
 
 public class ExpenseManagementActivity extends ListActivity {
@@ -18,14 +15,8 @@ public class ExpenseManagementActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        List<String> itens = Arrays.asList("Item 1", "Item 2");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itens);
-
-        adapter.notifyDataSetChanged();
-
-        setListAdapter(adapter);
-
+        ListMonthlyExpensesUsecase listMonthlyUsecase = ListMonthlyExpensesUsecaseFactory.make(this);
+        listMonthlyUsecase.list(2015, 10);
     }
 
 
