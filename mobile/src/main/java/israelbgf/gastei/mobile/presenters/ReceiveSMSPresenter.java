@@ -27,16 +27,18 @@ public class ReceiveSMSPresenter implements ReceiveSMSUsecase.Presenter {
     public void presentNewExpenseAdded(ExpenseEntity expenseAdded) {
         Notification.Builder notificationBuilder =
                 new Notification.Builder(context)
+                        .setSmallIcon(android.R.drawable.ic_dialog_info)
                         .setContentTitle("There is a new expense!")
                         .setContentText("A new expense with the value of " + expenseAdded.getAmount());
-        Intent resultIntent = new Intent(context, ExpenseManagementActivity.class);
+        Intent intent = new Intent(context, ExpenseManagementActivity.class);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(ExpenseManagementActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
+        stackBuilder.addNextIntentWithParentStack(intent);
 
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent((int) System.currentTimeMillis(), PendingIntent.FLAG_UPDATE_CURRENT);
-        notificationBuilder.setContentIntent(resultPendingIntent);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationBuilder.setContentIntent(pendingIntent);
+
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notificationBuilder.build());
