@@ -13,7 +13,7 @@ import static java.lang.Double.parseDouble;
 
 public class ReceiveSMSUsecase {
 
-    public static final String BRADESCO_SMS_NUMBER = "2788";
+    public static final String BRADESCO_SMS_NUMBER = "27888";
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.getDefault());
     private final ExpenseGateway gateway;
     private Presenter presenter;
