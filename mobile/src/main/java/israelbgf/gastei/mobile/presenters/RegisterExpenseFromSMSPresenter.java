@@ -8,13 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 import israelbgf.gastei.core.entities.ExpenseEntity;
-import israelbgf.gastei.core.usecases.ReceiveSMSUsecase;
+import israelbgf.gastei.core.usecases.RegisterExpenseFromSMSUsecase;
 import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
 
-public class ReceiveSMSPresenter implements ReceiveSMSUsecase.Presenter {
+public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMSUsecase.Presenter {
     private Context context;
 
-    public ReceiveSMSPresenter(Context context) {
+    public RegisterExpenseFromSMSPresenter(Context context) {
         this.context = context;
     }
 

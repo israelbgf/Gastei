@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import israelbgf.gastei.mobile.factories.ReceiveSMSUsecaseFactory;
+import israelbgf.gastei.mobile.factories.RegisterExpenseFromSMSUsecaseFactory;
 
 public class SmsReceiver extends BroadcastReceiver {
 
@@ -23,7 +23,7 @@ public class SmsReceiver extends BroadcastReceiver {
             String phoneNumber = currentMessage.getDisplayOriginatingAddress();
             String message = currentMessage.getDisplayMessageBody();
 
-            ReceiveSMSUsecaseFactory.make(context).receive(phoneNumber, message);
+            RegisterExpenseFromSMSUsecaseFactory.make(context).receive(phoneNumber, message);
         }
     }
 }

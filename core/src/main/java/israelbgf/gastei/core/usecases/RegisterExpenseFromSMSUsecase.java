@@ -11,14 +11,14 @@ import java.util.regex.Pattern;
 
 import static java.lang.Double.parseDouble;
 
-public class ReceiveSMSUsecase {
+public class RegisterExpenseFromSMSUsecase {
 
     public static final String BRADESCO_SMS_NUMBER = "27888";
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.getDefault());
     private final ExpenseGateway gateway;
     private Presenter presenter;
 
-    public ReceiveSMSUsecase(ExpenseGateway gateway, Presenter presenter) {
+    public RegisterExpenseFromSMSUsecase(ExpenseGateway gateway, Presenter presenter) {
         this.gateway = gateway;
         this.presenter = presenter;
     }

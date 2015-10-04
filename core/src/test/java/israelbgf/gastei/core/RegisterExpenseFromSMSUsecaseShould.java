@@ -2,14 +2,14 @@ package israelbgf.gastei.core;
 
 import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
-import israelbgf.gastei.core.usecases.ReceiveSMSUsecase;
+import israelbgf.gastei.core.usecases.RegisterExpenseFromSMSUsecase;
 import org.junit.After;
 import org.junit.Test;
 
 import static israelbgf.gastei.core.utils.ExpenseFactory.sampleExpense;
 import static org.mockito.Mockito.*;
 
-public class ReceiveSMSUsecaseShould {
+public class RegisterExpenseFromSMSUsecaseShould {
 
     private static final String INVALID_NUMBER = "9999";
 
@@ -19,12 +19,12 @@ public class ReceiveSMSUsecaseShould {
     public static final String INVALID_SMS_CONTENT = "MENSAGEM ERRADA";
 
     ExpenseGateway gateway = mock(ExpenseGateway.class);
-    ReceiveSMSUsecase.Presenter presenter = mock(ReceiveSMSUsecase.Presenter.class);
-    ReceiveSMSUsecase usecase = new ReceiveSMSUsecase(gateway, presenter);
+    RegisterExpenseFromSMSUsecase.Presenter presenter = mock(RegisterExpenseFromSMSUsecase.Presenter.class);
+    RegisterExpenseFromSMSUsecase usecase = new RegisterExpenseFromSMSUsecase(gateway, presenter);
 
     @Test
     public void storeExpenseWhenParseValidSMS() {
-        usecase.receive(ReceiveSMSUsecase.BRADESCO_SMS_NUMBER, SMS_CONTENT);
+        usecase.receive(RegisterExpenseFromSMSUsecase.BRADESCO_SMS_NUMBER, SMS_CONTENT);
 
         ExpenseEntity expectedExpense = sampleExpense();
         verify(presenter).presentNewExpenseAdded(expectedExpense);
@@ -33,7 +33,7 @@ public class ReceiveSMSUsecaseShould {
 
     @Test
     public void notifyErrorWhenParseInvalidSMS() {
-        usecase.receive(ReceiveSMSUsecase.BRADESCO_SMS_NUMBER, INVALID_SMS_CONTENT);
+        usecase.receive(RegisterExpenseFromSMSUsecase.BRADESCO_SMS_NUMBER, INVALID_SMS_CONTENT);
 
         verify(presenter).presentInvalidSMSContent(INVALID_SMS_CONTENT);
     }
