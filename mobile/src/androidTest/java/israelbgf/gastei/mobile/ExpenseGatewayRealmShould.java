@@ -11,6 +11,7 @@ import israelbgf.gastei.mobile.gateways.realm.ExpenseRealm;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class ExpenseGatewayRealmShould extends ApplicationTestCase<Application> {
 
@@ -30,33 +31,39 @@ public class ExpenseGatewayRealmShould extends ApplicationTestCase<Application> 
         gateway = new ExpenseGatewayRealm(realm);
     }
 
-    public void testExpensePersistence() {
-        ExpenseEntity expense = new ExpenseEntity(20, "Giassi", DateUtils.date(2015, 12));
+    public void testPersistenceInDatabase() {
+        ExpenseEntity expense = new ExpenseEntity(UUID.randomUUID().toString(), 20, "Giassi", DateUtils.date(2015, 12), true);
 
         gateway.save(expense);
 
         RealmResults<ExpenseRealm> results = realm.where(ExpenseRealm.class).findAll();
         assertEquals(1, results.size());
         ExpenseRealm storedExpense = results.get(0);
+        assertEquals(expense.getId(), storedExpense.getId());
         assertEquals(expense.getAmount(), storedExpense.getAmount());
         assertEquals(expense.getDate().getTime(), storedExpense.getDate().getTime(), 1000);
         assertEquals(expense.getPlace(), storedExpense.getPlace());
+        assertEquals(expense.isShared(), storedExpense.isShared());
 
     }
 
-    public void testRetrieveExpenseByMonth() {
+    public void testRetrievalByMonth() {
         Date january = DateUtils.date(2015, 1);
         Date februrary = DateUtils.date(2015, 2);
-        gateway.save(new ExpenseEntity(10, "Giassi", january));
-        gateway.save(new ExpenseEntity(20, "Wallmart", februrary));
+        ExpenseEntity giassiExpense = new ExpenseEntity(UUID.randomUUID().toString(), 10, "Giassi", january, true);
+        ExpenseEntity wallmartExpense = new ExpenseEntity(UUID.randomUUID().toString(), 20, "Wallmart", februrary, true);
+        gateway.save(giassiExpense);
+        gateway.save(wallmartExpense);
 
         List<ExpenseEntity> expenses = gateway.retrieveByMonth(2015, 1);
 
         assertEquals(1, expenses.size());
         ExpenseEntity storedExpense = expenses.get(0);
-        assertEquals(10.0, storedExpense.getAmount());
-        assertEquals("Giassi", storedExpense.getPlace());
-        assertEquals(january.getTime(), storedExpense.getDate().getTime(), 1000);
+        assertEquals(giassiExpense.getId(), storedExpense.getId());
+        assertEquals(giassiExpense.getAmount(), storedExpense.getAmount());
+        assertEquals(giassiExpense.getPlace(), storedExpense.getPlace());
+        assertEquals(giassiExpense.getDate().getTime(), storedExpense.getDate().getTime(), 1000);
+        assertEquals(giassiExpense.isShared(), storedExpense.isShared());
 
     }
 

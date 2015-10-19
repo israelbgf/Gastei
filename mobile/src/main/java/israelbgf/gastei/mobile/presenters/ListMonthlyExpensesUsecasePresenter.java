@@ -23,9 +23,9 @@ public class ListMonthlyExpensesUsecasePresenter implements Presenter {
     }
 
     @Override
-    public void presentExpenses(List<ExpenseEntity> expenses, double totalAmount) {
+    public void presentExpenses(Struct struct) {
         itens.clear();
-        for (ExpenseEntity expense : expenses) {
+        for (ExpenseEntity expense : struct.expenses) {
             itens.add(formatted(expense));
         }
         adapter.notifyDataSetChanged();

@@ -2,6 +2,7 @@ package israelbgf.gastei.core.usecases;
 
 import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
+import israelbgf.gastei.core.utils.IDGenerator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,10 +18,12 @@ public class RegisterExpenseFromSMSUsecase {
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.getDefault());
     private final ExpenseGateway gateway;
     private Presenter presenter;
+    private IDGenerator idGenerator;
 
-    public RegisterExpenseFromSMSUsecase(ExpenseGateway gateway, Presenter presenter) {
+    public RegisterExpenseFromSMSUsecase(ExpenseGateway gateway, Presenter presenter, IDGenerator idGenerator) {
         this.gateway = gateway;
         this.presenter = presenter;
+        this.idGenerator = idGenerator;
     }
 
     public void receive(String phoneNumber, String smsContent) {
@@ -50,7 +53,7 @@ public class RegisterExpenseFromSMSUsecase {
             String local = matcher.group(3);
 
             try {
-                return new ExpenseEntity(parseDouble(amount), local, formatter.parse(date));
+                return new ExpenseEntity(idGenerator.generate(), parseDouble(amount), local, formatter.parse(date), false);
             } catch (ParseException e) {
                 throw new InvalidSMSException();
             }

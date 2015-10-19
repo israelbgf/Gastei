@@ -9,4 +9,5 @@ public interface ExpenseGateway {
 
     List<ExpenseEntity> retrieveByMonth(int year, int month);
 
+    void markExpenseAsShared(String existingExpenseId);
 }

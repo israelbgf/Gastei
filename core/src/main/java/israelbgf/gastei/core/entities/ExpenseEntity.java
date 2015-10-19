@@ -4,9 +4,15 @@ import java.util.Date;
 import java.util.Objects;
 
 public class ExpenseEntity {
+    private String id;
     private final double amount;
     private final String place;
     private final Date date;
+    private boolean shared;
+
+    public String getId() {
+        return id;
+    }
 
     public double getAmount() {
         return amount;
@@ -20,17 +26,24 @@ public class ExpenseEntity {
         return date;
     }
 
-    public ExpenseEntity(double amount, String place, Date date) {
+    public boolean isShared() {
+        return shared;
+    }
+
+    public ExpenseEntity(String id, double amount, String place, Date date, boolean shared) {
+        this.id = id;
         this.amount = amount;
         this.place = place;
         this.date = date;
+        this.shared = shared;
     }
 
     @Override
     public String toString() {
         return "ExpenseEntity{" +
-                "amount=" + amount +
-                ", local='" + place + '\'' +
+                "id='" + id + '\'' +
+                ", amount=" + amount +
+                ", place='" + place + '\'' +
                 ", date=" + date +
                 '}';
     }
@@ -39,13 +52,16 @@ public class ExpenseEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ExpenseEntity expense = (ExpenseEntity) o;
-        return Objects.equals(amount, expense.amount) &&
-                Objects.equals(place, expense.place);
+        ExpenseEntity that = (ExpenseEntity) o;
+        return Objects.equals(amount, that.amount) &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(place, that.place) &&
+                Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amount, place);
+        return Objects.hash(id, amount, place, date);
     }
+
 }

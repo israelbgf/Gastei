@@ -1,14 +1,18 @@
 package israelbgf.gastei.mobile.gateways.realm;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 import java.util.Date;
 
 public class ExpenseRealm extends RealmObject {
 
+    @PrimaryKey
+    private String id;
     private double amount;
     private Date date;
     private String place;
+    private boolean shared;
 
     public double getAmount() {
         return amount;
@@ -32,5 +36,22 @@ public class ExpenseRealm extends RealmObject {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+
+    public boolean isShared() {
+        return shared;
+    }
+
+    public void setShared(boolean shared) {
+        this.shared = shared;
     }
 }

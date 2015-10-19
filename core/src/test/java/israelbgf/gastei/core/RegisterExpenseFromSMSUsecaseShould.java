@@ -3,6 +3,7 @@ package israelbgf.gastei.core;
 import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 import israelbgf.gastei.core.usecases.RegisterExpenseFromSMSUsecase;
+import israelbgf.gastei.core.utils.IDGenerator;
 import org.junit.After;
 import org.junit.Test;
 
@@ -20,13 +21,16 @@ public class RegisterExpenseFromSMSUsecaseShould {
 
     ExpenseGateway gateway = mock(ExpenseGateway.class);
     RegisterExpenseFromSMSUsecase.Presenter presenter = mock(RegisterExpenseFromSMSUsecase.Presenter.class);
-    RegisterExpenseFromSMSUsecase usecase = new RegisterExpenseFromSMSUsecase(gateway, presenter);
+    IDGenerator idGenerator = mock(IDGenerator.class);
+    RegisterExpenseFromSMSUsecase usecase = new RegisterExpenseFromSMSUsecase(gateway, presenter, idGenerator);
 
     @Test
     public void storeExpenseWhenParseValidSMS() {
+        ExpenseEntity expectedExpense = sampleExpense();
+        when(idGenerator.generate()).thenReturn(expectedExpense.getId());
+
         usecase.receive(RegisterExpenseFromSMSUsecase.BRADESCO_SMS_NUMBER, SMS_CONTENT);
 
-        ExpenseEntity expectedExpense = sampleExpense();
         verify(presenter).presentNewExpenseAdded(expectedExpense);
         verify(gateway).save(expectedExpense);
     }

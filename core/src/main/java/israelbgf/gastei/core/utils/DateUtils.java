@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.MILLISECOND;
 import static java.util.Calendar.SECOND;
 
 public class DateUtils {
@@ -17,6 +18,7 @@ public class DateUtils {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.set(year, month - 1, day, hour, minutes);
         calendar.set(SECOND, 0);
+        calendar.set(MILLISECOND, 0);
         return calendar.getTime();
     }
 

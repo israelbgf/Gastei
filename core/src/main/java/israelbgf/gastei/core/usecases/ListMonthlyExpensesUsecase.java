@@ -16,7 +16,7 @@ public class ListMonthlyExpensesUsecase {
 
     public void list(int year, int month) {
         List<ExpenseEntity> expenses = gateway.retrieveByMonth(year, month);
-        presenter.presentExpenses(expenses, totalAmount(expenses));
+        presenter.presentExpenses(new Presenter.Struct(expenses, totalAmount(expenses), totalShared(expenses)));
     }
 
     private double totalAmount(List<ExpenseEntity> expenses) {
@@ -27,7 +27,29 @@ public class ListMonthlyExpensesUsecase {
         return totalAmount;
     }
 
+    private double totalShared(List<ExpenseEntity> expenses) {
+        float totalAmount = 0;
+        for (ExpenseEntity expense : expenses) {
+            if (expense.isShared())
+                totalAmount += expense.getAmount();
+        }
+        return totalAmount;
+    }
+
     public interface Presenter {
-        void presentExpenses(List<ExpenseEntity> expenses, double totalAmount);
+
+        void presentExpenses(Struct struct);
+
+        class Struct {
+            public final List<ExpenseEntity> expenses;
+            public final double totalAmount;
+            public final double sharedAmount;
+
+            public Struct(List<ExpenseEntity> expenses, double totalAmount, double sharedAmount) {
+                this.expenses = expenses;
+                this.totalAmount = totalAmount;
+                this.sharedAmount = sharedAmount;
+            }
+        }
     }
 }

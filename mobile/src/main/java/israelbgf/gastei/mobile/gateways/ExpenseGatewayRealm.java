@@ -24,9 +24,11 @@ public class ExpenseGatewayRealm implements ExpenseGateway {
     public void save(ExpenseEntity expense) {
         realm.beginTransaction();
         ExpenseRealm expenseRealm = realm.createObject(ExpenseRealm.class);
+        expenseRealm.setId(expense.getId());
         expenseRealm.setAmount(expense.getAmount());
         expenseRealm.setDate(expense.getDate());
         expenseRealm.setPlace(expense.getPlace());
+        expenseRealm.setShared(expense.isShared());
         realm.commitTransaction();
     }
 
@@ -38,10 +40,15 @@ public class ExpenseGatewayRealm implements ExpenseGateway {
 
         List<ExpenseEntity> expenses = new ArrayList<>();
         for (ExpenseRealm expenseRealm : results) {
-            expenses.add(new ExpenseEntity(expenseRealm.getAmount(), expenseRealm.getPlace(), expenseRealm.getDate()));
+            expenses.add(new ExpenseEntity(expenseRealm.getId(), expenseRealm.getAmount(), expenseRealm.getPlace(), expenseRealm.getDate(), expenseRealm.isShared()));
         }
 
         return expenses;
+    }
+
+    @Override
+    public void markExpenseAsShared(String existingExpenseId) {
+
     }
 
 }
