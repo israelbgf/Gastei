@@ -48,7 +48,13 @@ public class ExpenseGatewayRealm implements ExpenseGateway {
 
     @Override
     public void markExpenseAsShared(String existingExpenseId) {
+            ExpenseRealm expense = realm.where(ExpenseRealm.class)
+                .equalTo("id", existingExpenseId)
+                .findFirst();
 
+        realm.beginTransaction();
+        expense.setShared(true);
+        realm.commitTransaction();
     }
 
 }

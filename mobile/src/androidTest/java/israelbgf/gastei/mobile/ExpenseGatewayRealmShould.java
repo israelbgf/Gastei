@@ -67,4 +67,15 @@ public class ExpenseGatewayRealmShould extends ApplicationTestCase<Application> 
 
     }
 
+    public void testMarkAsShared() {
+        Date january = DateUtils.date(2015, 1);
+        ExpenseEntity giassiExpense = new ExpenseEntity(UUID.randomUUID().toString(), 10, "Giassi", january, false);
+        gateway.save(giassiExpense);
+
+        gateway.markExpenseAsShared(giassiExpense.getId());
+
+        ExpenseRealm storedExpense = realm.where(ExpenseRealm.class).findFirst();
+        assertTrue(storedExpense.isShared());
+    }
+
 }
