@@ -4,16 +4,16 @@ import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 import israelbgf.gastei.core.usecases.ListMonthlyExpensesUsecase;
 import israelbgf.gastei.core.usecases.ListMonthlyExpensesUsecase.Presenter;
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static israelbgf.gastei.core.utils.DateUtils.date;
 import static israelbgf.gastei.core.utils.ExpenseFactory.expense;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -35,8 +35,8 @@ public class ListMonthlyExpensesUsecaseShould {
 
     @Test
     public void presentSingleExpenseWhenThereIsOne() {
-        Date whateverDate = date(2015, 1);
-        ExpenseEntity expense = expense(10, whateverDate, false);
+        Date date = date(2015, 1);
+        ExpenseEntity expense = expense(10, date, false);
         List<ExpenseEntity> expenses = asList(expense);
         when(gateway.retrieveByMonth(2015, 1)).thenReturn(expenses);
 
@@ -46,10 +46,10 @@ public class ListMonthlyExpensesUsecaseShould {
     }
 
     @Test
-    public void presentTwoGroupedExpensesWhenBothFromSameDay() {
-        Date whateverDate = date(2015, 1);
-        ExpenseEntity expense = expense(10, whateverDate, false);
-        ExpenseEntity otherExpense = expense(10, whateverDate, false);
+    public void presentOneGroupOfExpensesWhenBothFromSameDay() {
+        Date date = date(2015, 1);
+        ExpenseEntity expense = expense(10, date, false);
+        ExpenseEntity otherExpense = expense(10, date, false);
         List<ExpenseEntity> expenses = asList(expense, otherExpense);
         when(gateway.retrieveByMonth(2015, 1)).thenReturn(expenses);
 
@@ -59,9 +59,26 @@ public class ListMonthlyExpensesUsecaseShould {
     }
 
     @Test
+    public void presentTwoGroupsOfExpensesWhenBothFromDistinctDays() {
+        int DAY_ONE = 1;
+        int DAY_TWO = 2;
+        Date date = date(2015, 1, DAY_ONE);
+        Date otherDate = date(2015, 1, DAY_TWO);
+        ExpenseEntity expense = expense(10, date, false);
+        ExpenseEntity otherExpense = expense(10, otherDate, false);
+        List<ExpenseEntity> expenses = asList(expense, otherExpense);
+        when(gateway.retrieveByMonth(2015, 1)).thenReturn(expenses);
+
+        usecase.list(2015, 1);
+
+        assertThat(presenter.spiedStruct.dailyExpenses.get(DAY_ONE), equalTo(asList(expense)));
+        assertThat(presenter.spiedStruct.dailyExpenses.get(DAY_TWO), equalTo(asList(otherExpense)));
+    }
+
+    @Test
     public void presentZeroAsSumWhenDoesNotExistSharedExpenses() {
-        Date whateverDate = date(2015, 1);
-        ExpenseEntity nonSharedExpense = expense(10, whateverDate, false);
+        Date date = date(2015, 1);
+        ExpenseEntity nonSharedExpense = expense(10, date, false);
         List<ExpenseEntity> expenses = asList(nonSharedExpense);
         when(gateway.retrieveByMonth(2015, 1)).thenReturn(expenses);
 
@@ -72,9 +89,9 @@ public class ListMonthlyExpensesUsecaseShould {
 
     @Test
     public void presentSharedExpenseAmountWhenThereIsOne() {
-        Date whateverDate = date(2015, 1);
-        ExpenseEntity nonSharedExpense = expense(10, whateverDate, false);
-        ExpenseEntity sharedExpense = expense(10, whateverDate, true);
+        Date date = date(2015, 1);
+        ExpenseEntity nonSharedExpense = expense(10, date, false);
+        ExpenseEntity sharedExpense = expense(10, date, true);
         List<ExpenseEntity> expenses = asList(nonSharedExpense, sharedExpense);
         when(gateway.retrieveByMonth(2015, 1)).thenReturn(expenses);
 
@@ -85,10 +102,10 @@ public class ListMonthlyExpensesUsecaseShould {
 
     @Test
     public void presentSharedExpenseAmountWhenThereAreMany() {
-        Date whateverDate = date(2015, 1);
-        ExpenseEntity nonSharedExpense = expense(10, whateverDate, false);
-        ExpenseEntity sharedExpense = expense(10, whateverDate, true);
-        ExpenseEntity otherSharedExpense = expense(20, whateverDate, true);
+        Date date = date(2015, 1);
+        ExpenseEntity nonSharedExpense = expense(10, date, false);
+        ExpenseEntity sharedExpense = expense(10, date, true);
+        ExpenseEntity otherSharedExpense = expense(20, date, true);
         List<ExpenseEntity> expenses = asList(nonSharedExpense, sharedExpense, otherSharedExpense);
         when(gateway.retrieveByMonth(2015, 1)).thenReturn(expenses);
 

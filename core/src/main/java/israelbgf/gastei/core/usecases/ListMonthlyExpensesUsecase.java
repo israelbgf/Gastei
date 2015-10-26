@@ -3,9 +3,13 @@ package israelbgf.gastei.core.usecases;
 import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static israelbgf.gastei.core.utils.DateUtils.dayOfTheMonth;
+import static java.util.Arrays.asList;
 
 public class ListMonthlyExpensesUsecase {
     private final ExpenseGateway gateway;
@@ -18,10 +22,24 @@ public class ListMonthlyExpensesUsecase {
 
     public void list(int year, int month) {
         List<ExpenseEntity> expenses = gateway.retrieveByMonth(year, month);
+        presenter.presentExpenses(new Presenter.Struct(
+                        groupExpensesByMonthDay(expenses),
+                        totalAmount(expenses),
+                        totalShared(expenses))
+        );
+    }
+
+    private HashMap<Integer, List<ExpenseEntity>> groupExpensesByMonthDay(List<ExpenseEntity> expenses) {
         HashMap<Integer, List<ExpenseEntity>> dailyExpenses = new HashMap<>();
         if (!expenses.isEmpty())
-            dailyExpenses.put(1, expenses);
-        presenter.presentExpenses(new Presenter.Struct(dailyExpenses, totalAmount(expenses), totalShared(expenses)));
+            for (ExpenseEntity expense : expenses) {
+                int dayOfTheMonth = dayOfTheMonth(expense.getDate());
+                if (dailyExpenses.containsKey(dayOfTheMonth))
+                    dailyExpenses.get(dayOfTheMonth).add(expense);
+                else
+                    dailyExpenses.put(dayOfTheMonth, new ArrayList<>(asList(expense)));
+            }
+        return dailyExpenses;
     }
 
     private double totalAmount(List<ExpenseEntity> expenses) {
