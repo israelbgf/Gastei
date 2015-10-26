@@ -4,18 +4,19 @@ import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 import israelbgf.gastei.core.usecases.ListMonthlyExpensesUsecase;
 import israelbgf.gastei.core.usecases.ListMonthlyExpensesUsecase.Presenter;
-import org.junit.After;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static israelbgf.gastei.core.utils.DateUtils.date;
 import static israelbgf.gastei.core.utils.ExpenseFactory.expense;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ListMonthlyExpensesUsecaseShould {
 
@@ -24,17 +25,37 @@ public class ListMonthlyExpensesUsecaseShould {
     ListMonthlyExpensesUsecase usecase = new ListMonthlyExpensesUsecase(gateway, presenter);
 
     @Test
-    public void listAllWithTheirTotalWhenExpensesExistsForGivenMonth() {
-        Date january = date(2015, 1);
-        ExpenseEntity firstJanuaryExpense = expense(10, january);
-        ExpenseEntity secondJanuaryExpense = expense(20, january);
-        List<ExpenseEntity> expenses = asList(firstJanuaryExpense, secondJanuaryExpense);
+    public void presentNoExpensesWhenEmptyMonth() {
+        when(gateway.retrieveByMonth(2015, 1)).thenReturn(Collections.<ExpenseEntity>emptyList());
+
+        usecase.list(2015, 1);
+
+        assertThat(presenter.spiedStruct.dailyExpenses.values().size(), equalTo(0));
+    }
+
+    @Test
+    public void presentSingleExpenseWhenThereIsOne() {
+        Date whateverDate = date(2015, 1);
+        ExpenseEntity expense = expense(10, whateverDate, false);
+        List<ExpenseEntity> expenses = asList(expense);
         when(gateway.retrieveByMonth(2015, 1)).thenReturn(expenses);
 
         usecase.list(2015, 1);
 
-        assertThat(presenter.spiedStruct.expenses, equalTo(expenses));
-        assertThat(presenter.spiedStruct.totalAmount, equalTo(firstJanuaryExpense.getAmount() + secondJanuaryExpense.getAmount()));
+        assertThat(presenter.spiedStruct.dailyExpenses.get(1), equalTo(expenses));
+    }
+
+    @Test
+    public void presentTwoGroupedExpensesWhenBothFromSameDay() {
+        Date whateverDate = date(2015, 1);
+        ExpenseEntity expense = expense(10, whateverDate, false);
+        ExpenseEntity otherExpense = expense(10, whateverDate, false);
+        List<ExpenseEntity> expenses = asList(expense, otherExpense);
+        when(gateway.retrieveByMonth(2015, 1)).thenReturn(expenses);
+
+        usecase.list(2015, 1);
+
+        assertThat(presenter.spiedStruct.dailyExpenses.get(1), equalTo(expenses));
     }
 
     @Test

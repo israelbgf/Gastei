@@ -12,8 +12,8 @@ import israelbgf.gastei.core.usecases.ListMonthlyExpensesUsecase.Presenter;
 import israelbgf.gastei.mobile.R;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ListMonthlyExpensesUsecasePresenter implements Presenter {
 
@@ -50,15 +50,28 @@ public class ListMonthlyExpensesUsecasePresenter implements Presenter {
                 convertView = inflater.inflate(R.layout.expense_item, parent, false);
 
             ExpenseEntity expense = getItem(position);
+            TextView dayOfWeekView = (TextView) convertView.findViewById(R.id.day_of_week);
             TextView amountView = (TextView) convertView.findViewById(R.id.amount);
             TextView placeView = (TextView) convertView.findViewById(R.id.place);
             TextView cityView = (TextView) convertView.findViewById(R.id.city);
 
+            if(isFirstExpenseOfTheDay(expense)){
+                dayOfWeekView.setVisibility(View.VISIBLE);
+                dayOfWeekView.setText(dayOfWeek(expense.getDate()));
+            }
             amountView.setText(CURRENCY_FORMATTER.format(expense.getAmount()));
             placeView.setText(expense.getPlace());
             cityView.setText("CITY");
 
             return convertView;
+        }
+
+        private boolean isFirstExpenseOfTheDay(ExpenseEntity expense) {
+            return true;
+        }
+
+        private String dayOfWeek(Date date) {
+            return new SimpleDateFormat("EEEE MM", Locale.US).format(date);
         }
     }
 }

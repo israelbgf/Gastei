@@ -3,7 +3,9 @@ package israelbgf.gastei.core.usecases;
 import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ListMonthlyExpensesUsecase {
     private final ExpenseGateway gateway;
@@ -16,7 +18,10 @@ public class ListMonthlyExpensesUsecase {
 
     public void list(int year, int month) {
         List<ExpenseEntity> expenses = gateway.retrieveByMonth(year, month);
-        presenter.presentExpenses(new Presenter.Struct(expenses, totalAmount(expenses), totalShared(expenses)));
+        HashMap<Integer, List<ExpenseEntity>> dailyExpenses = new HashMap<>();
+        if (!expenses.isEmpty())
+            dailyExpenses.put(1, expenses);
+        presenter.presentExpenses(new Presenter.Struct(dailyExpenses, totalAmount(expenses), totalShared(expenses)));
     }
 
     private double totalAmount(List<ExpenseEntity> expenses) {
@@ -41,12 +46,12 @@ public class ListMonthlyExpensesUsecase {
         void presentExpenses(Struct struct);
 
         class Struct {
-            public final List<ExpenseEntity> expenses;
             public final double totalAmount;
             public final double sharedAmount;
+            public Map<Integer, List<ExpenseEntity>> dailyExpenses;
 
-            public Struct(List<ExpenseEntity> expenses, double totalAmount, double sharedAmount) {
-                this.expenses = expenses;
+            public Struct(HashMap<Integer, List<ExpenseEntity>> dailyExpenses, double totalAmount, double sharedAmount) {
+                this.dailyExpenses = dailyExpenses;
                 this.totalAmount = totalAmount;
                 this.sharedAmount = sharedAmount;
             }
