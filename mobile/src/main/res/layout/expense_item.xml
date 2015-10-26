@@ -6,6 +6,7 @@
 
     <TextView
             android:text="8/7 Segunda"
+            android:id="@+id/day_of_week"
             android:padding="6dip"
             android:background="@android:color/darker_gray"
             android:layout_width="fill_parent"
