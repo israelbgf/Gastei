@@ -15,6 +15,7 @@ import israelbgf.gastei.mobile.R;
 import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ListMonthlyExpensesUsecasePresenter implements Presenter {
@@ -44,16 +45,31 @@ public class ListMonthlyExpensesUsecasePresenter implements Presenter {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         //Your RecyclerView.Adapter
-        SimpleAdapter mAdapter = new SimpleAdapter(activity, new String[]{"duas", "coisa"});
+        Collection<List<ExpenseEntity>> values = struct.dailyExpenses.values();
+        SimpleAdapter mAdapter = new SimpleAdapter(activity, values);
 
 
         //This is the code to provide a sectioned list
         List<SimpleSectionedRecyclerViewAdapter.Section> sections = new ArrayList<SimpleSectionedRecyclerViewAdapter.Section>();
 
         //Sections
-        sections.add(new SimpleSectionedRecyclerViewAdapter.Section(0, "Section 1"));
-        sections.add(new SimpleSectionedRecyclerViewAdapter.Section(1, "Section 2"));
-        sections.add(new SimpleSectionedRecyclerViewAdapter.Section(2, "Section 3"));
+        if(!struct.dailyExpenses.isEmpty()){
+
+            LinkedList<List<ExpenseEntity>> list = new LinkedList<>(values);
+            int contador = 0;
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(0, dayOfWeek(list.getFirst().get(0).getDate())));
+            boolean first = true;
+            for(Map.Entry<Integer, List<ExpenseEntity>> entry : struct.dailyExpenses.entrySet()){
+                if (first) {
+                    contador += entry.getValue().size();
+                    first = false;
+                    continue;
+                } else {
+                    sections.add(new SimpleSectionedRecyclerViewAdapter.Section(contador, dayOfWeek(entry.getValue().get(0).getDate())));
+                    contador += entry.getValue().size();
+                }
+            }
+        }
 
         //Add your adapter to the sectionAdapter
         SimpleSectionedRecyclerViewAdapter.Section[] dummy = new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
@@ -63,10 +79,10 @@ public class ListMonthlyExpensesUsecasePresenter implements Presenter {
         //Apply this adapter to the RecyclerView
         recyclerView.setAdapter(sectionedAdapter);
 
+    }
 
-//        itens.clear();
-//        itens.addAll(struct.dailyExpenses.entrySet());
-//        adapter.notifyDataSetChanged();
+    private String dayOfWeek(Date date) {
+        return new SimpleDateFormat("EEEE dd", Locale.US).format(date);
     }
 
     public static class SimpleSectionedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -242,57 +258,47 @@ public class ListMonthlyExpensesUsecasePresenter implements Presenter {
 
     public static class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.SimpleViewHolder> {
 
-        private final Context mContext;
-        private List<String> mData;
-
-        public void add(String s, int position) {
-            position = position == -1 ? getItemCount() : position;
-            mData.add(position, s);
-            notifyItemInserted(position);
-        }
-
-        public void remove(int position) {
-            if (position < getItemCount()) {
-                mData.remove(position);
-                notifyItemRemoved(position);
-            }
-        }
+        private final Context context;
+        private List<ExpenseEntity> expenses = new ArrayList<>();
 
         public static class SimpleViewHolder extends RecyclerView.ViewHolder {
-            public final TextView title;
+            public final TextView amount;
+            public final TextView place;
 
             public SimpleViewHolder(View view) {
                 super(view);
-                title = (TextView) view.findViewById(R.id.day_of_week);
+                amount = (TextView) view.findViewById(R.id.amount);
+                place = (TextView) view.findViewById(R.id.place);
             }
         }
 
-        public SimpleAdapter(Context context, String[] data) {
-            mContext = context;
-            if (data != null)
-                mData = new ArrayList<String>(Arrays.asList(data));
-            else mData = new ArrayList<String>();
+        public SimpleAdapter(Context context, Collection<List<ExpenseEntity>> expensesGroup) {
+            this.context = context;
+            for(List<ExpenseEntity> expenses : expensesGroup){
+                this.expenses.addAll(expenses);
+            }
         }
 
         public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            final View view = LayoutInflater.from(mContext).inflate(R.layout.expense_item, parent, false);
+            final View view = LayoutInflater.from(context).inflate(R.layout.expense_item, parent, false);
             return new SimpleViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(SimpleViewHolder holder, final int position) {
-            holder.title.setText(mData.get(position));
-            holder.title.setOnClickListener(new View.OnClickListener() {
+            holder.place.setText(expenses.get(position).getPlace());
+            holder.amount.setText(expenses.get(position).getAmount() + "");
+            holder.amount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(mContext, "Position =" + position, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Position =" + position, Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
         @Override
         public int getItemCount() {
-            return mData.size();
+            return expenses.size();
         }
     }
 

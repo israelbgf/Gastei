@@ -3,10 +3,7 @@ package israelbgf.gastei.core.usecases;
 import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static israelbgf.gastei.core.utils.DateUtils.dayOfTheMonth;
 import static java.util.Arrays.asList;
@@ -29,8 +26,8 @@ public class ListMonthlyExpensesUsecase {
         );
     }
 
-    private HashMap<Integer, List<ExpenseEntity>> groupExpensesByMonthDay(List<ExpenseEntity> expenses) {
-        HashMap<Integer, List<ExpenseEntity>> dailyExpenses = new HashMap<>();
+    private LinkedHashMap<Integer, List<ExpenseEntity>> groupExpensesByMonthDay(List<ExpenseEntity> expenses) {
+        LinkedHashMap<Integer, List<ExpenseEntity>> dailyExpenses = new LinkedHashMap<>();
         if (!expenses.isEmpty())
             for (ExpenseEntity expense : expenses) {
                 int dayOfTheMonth = dayOfTheMonth(expense.getDate());
@@ -66,9 +63,9 @@ public class ListMonthlyExpensesUsecase {
         class Struct {
             public final double totalAmount;
             public final double sharedAmount;
-            public Map<Integer, List<ExpenseEntity>> dailyExpenses;
+            public LinkedHashMap<Integer, List<ExpenseEntity>> dailyExpenses;
 
-            public Struct(HashMap<Integer, List<ExpenseEntity>> dailyExpenses, double totalAmount, double sharedAmount) {
+            public Struct(LinkedHashMap<Integer, List<ExpenseEntity>> dailyExpenses, double totalAmount, double sharedAmount) {
                 this.dailyExpenses = dailyExpenses;
                 this.totalAmount = totalAmount;
                 this.sharedAmount = sharedAmount;
