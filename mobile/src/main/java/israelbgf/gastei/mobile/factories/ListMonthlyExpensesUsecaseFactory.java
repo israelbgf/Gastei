@@ -6,6 +6,7 @@ import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 import israelbgf.gastei.core.usecases.ListMonthlyExpensesUsecase;
 import israelbgf.gastei.core.utils.DateUtils;
+import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
 import israelbgf.gastei.mobile.gateways.ExpenseGatewayRealm;
 import israelbgf.gastei.mobile.presenters.ListMonthlyExpensesUsecasePresenter;
 
@@ -13,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListMonthlyExpensesUsecaseFactory {
-    public static ListMonthlyExpensesUsecase make(ListActivity listActivity) {
+    public static ListMonthlyExpensesUsecase make(ExpenseManagementActivity activity) {
         return new ListMonthlyExpensesUsecase(
-//                new ExpenseGatewayRealm(Realm.getInstance(listActivity.getApplicationContext())),
+//                new ExpenseGatewayRealm(Realm.getInstance(activity.getApplicationContext())),
                 new ExpenseGateway() {
                     @Override
                     public void save(ExpenseEntity expense) {
@@ -39,6 +40,6 @@ public class ListMonthlyExpensesUsecaseFactory {
 
                     }
                 },
-        new ListMonthlyExpensesUsecasePresenter(listActivity));
+        new ListMonthlyExpensesUsecasePresenter(activity));
     }
 }

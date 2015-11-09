@@ -1,6 +1,6 @@
 package israelbgf.gastei.mobile.actvities;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,7 +10,7 @@ import israelbgf.gastei.mobile.R;
 import israelbgf.gastei.mobile.factories.ListMonthlyExpensesUsecaseFactory;
 
 
-public class ExpenseManagementActivity extends ListActivity {
+public class ExpenseManagementActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
