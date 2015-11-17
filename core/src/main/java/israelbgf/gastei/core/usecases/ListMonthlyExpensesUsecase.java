@@ -5,7 +5,7 @@ import israelbgf.gastei.core.gateways.ExpenseGateway;
 
 import java.util.*;
 
-import static israelbgf.gastei.core.utils.DateUtils.dayOfTheMonth;
+import static israelbgf.gastei.core.utils.DateUtils.dayOf;
 import static java.util.Arrays.asList;
 
 public class ListMonthlyExpensesUsecase {
@@ -30,7 +30,7 @@ public class ListMonthlyExpensesUsecase {
         LinkedHashMap<Integer, List<ExpenseEntity>> dailyExpenses = new LinkedHashMap<>();
         if (!expenses.isEmpty())
             for (ExpenseEntity expense : expenses) {
-                int dayOfTheMonth = dayOfTheMonth(expense.getDate());
+                int dayOfTheMonth = dayOf(expense.getDate());
                 if (dailyExpenses.containsKey(dayOfTheMonth))
                     dailyExpenses.get(dayOfTheMonth).add(expense);
                 else

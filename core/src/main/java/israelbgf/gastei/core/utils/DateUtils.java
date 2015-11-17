@@ -37,10 +37,22 @@ public class DateUtils {
         return date(year, month);
     }
 
-    public static int dayOfTheMonth(Date date){
+    public static int dayOf(Date date){
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int monthOf(Date date){
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.MONTH);
+    }
+
+    public static int yearOf(Date date){
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.YEAR);
     }
 
 }

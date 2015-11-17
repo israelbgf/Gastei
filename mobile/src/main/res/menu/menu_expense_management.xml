@@ -1,12 +1,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".ExpenseManagementActivity">
-    <item android:id="@+id/action_refresh"
-          android:title="@string/action_refresh"
-          android:orderInCategory="100"
-          android:showAsAction="never"/>
-    <item android:id="@+id/action_reimport"
-          android:title="@string/action_reimport"
-          android:orderInCategory="100"
-          android:showAsAction="never"/>
+    <item
+            android:id="@+id/action_refresh"
+            android:title="@string/action_refresh"
+            android:orderInCategory="100"
+            android:showAsAction="never"/>
+    <item
+            android:id="@+id/date_picker"
+            android:showAsAction="always"
+            android:actionLayout="@layout/expense_management_header"
+            android:title="Date Picker"/>
+    <item
+            android:id="@+id/action_reimport"
+            android:title="@string/action_reimport"
+            android:orderInCategory="100"
+            android:showAsAction="never"/>
 </menu>
