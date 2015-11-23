@@ -25,13 +25,25 @@ import static israelbgf.gastei.core.utils.DateUtils.yearOf;
 
 public class ExpenseManagementActivity extends Activity {
 
+    ListMonthlyExpensesUsecase listMonthlyUsecase;
+
+    int chosenYear = yearOf(new Date());
+    int chosenMonth = monthOf(new Date());
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ListMonthlyExpensesUsecase listMonthlyUsecase = ListMonthlyExpensesUsecaseFactory.make(this);
+        listMonthlyUsecase  = ListMonthlyExpensesUsecaseFactory.make(this);
+    }
 
-        Date today = new Date();
-        listMonthlyUsecase.list(yearOf(today), monthOf(today));
+    @Override
+    protected void onStart() {
+        super.onStart();
+        listMonthlyExpenses();
+    }
+
+    private void listMonthlyExpenses() {
+        listMonthlyUsecase.list(chosenYear, chosenMonth);
     }
 
     @Override
@@ -59,7 +71,7 @@ public class ExpenseManagementActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                Toast.makeText(this, "Refreshing data...", Toast.LENGTH_SHORT).show();
+                listMonthlyExpenses();
                 return true;
             case R.id.action_reimport:
                 Toast.makeText(this, "Re-importing data from Bradesco SMSs", Toast.LENGTH_SHORT).show();
@@ -71,24 +83,25 @@ public class ExpenseManagementActivity extends Activity {
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
-        final Calendar calendar = Calendar.getInstance();
-
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            return new DatePickerDialog(getActivity(), this, year, month, day);
+            ExpenseManagementActivity activity = getExpenseManagementActivity();
+            return new DatePickerDialog(activity, this, activity.chosenYear, activity.chosenMonth, 1);
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            this.calendar.set(year, month, day);
+            ExpenseManagementActivity activity = getExpenseManagementActivity();
+            activity.chosenYear = year;
+            activity.chosenMonth = month;
 
-            ListMonthlyExpensesUsecase listMonthlyUsecase = ListMonthlyExpensesUsecaseFactory.make((ExpenseManagementActivity) getActivity());
-            listMonthlyUsecase.list(year, month);
+            activity.listMonthlyExpenses();
+
             TextView monthView = (TextView) getActivity().findViewById(R.id.date_picker_button);
-            monthView.setText(getFormattedDate(year, month));
+            monthView.setText(getFormattedDate(activity.chosenYear, activity.chosenMonth));
+        }
+
+        private ExpenseManagementActivity getExpenseManagementActivity() {
+            return (ExpenseManagementActivity) getActivity();
         }
 
         public static String getFormattedDate(int year, int month) {
