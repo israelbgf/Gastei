@@ -1,24 +1,16 @@
 package israelbgf.gastei.core.usecases;
 
 import israelbgf.gastei.core.entities.ExpenseEntity;
+import israelbgf.gastei.core.entities.SMSParserEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 import israelbgf.gastei.core.utils.IDGenerator;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static java.lang.Double.parseDouble;
 
 public class RegisterExpenseFromSMSUsecase {
 
     public static final String BRADESCO_SMS_NUMBER = "27888";
-    private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.getDefault());
     private final ExpenseGateway gateway;
+    private final IDGenerator idGenerator;
     private Presenter presenter;
-    private IDGenerator idGenerator;
 
     public RegisterExpenseFromSMSUsecase(ExpenseGateway gateway, Presenter presenter, IDGenerator idGenerator) {
         this.gateway = gateway;
@@ -31,10 +23,10 @@ public class RegisterExpenseFromSMSUsecase {
             return;
 
         try {
-            ExpenseEntity newExpense = parseExpenseFrom(smsContent);
+            ExpenseEntity newExpense = new SMSParserEntity(idGenerator).parseExpenseFrom(smsContent);
             gateway.save(newExpense);
             presenter.presentNewExpenseAdded(newExpense);
-        } catch (InvalidSMSException e) {
+        } catch (SMSParserEntity.InvalidSMSException e) {
             presenter.presentInvalidSMSContent(smsContent);
         }
     }
@@ -43,28 +35,6 @@ public class RegisterExpenseFromSMSUsecase {
         return !phoneNumber.equals(BRADESCO_SMS_NUMBER);
     }
 
-    private ExpenseEntity parseExpenseFrom(String message) {
-        Pattern pattern = Pattern.compile(".*EM\\s(.*)\\$\\s(.*)\\sNO\\(A\\)\\s(.*)");
-        Matcher matcher = pattern.matcher(message);
-
-        if (matcher.find()) {
-            String date = matcher.group(1);
-            String amount = matcher.group(2).replace(",", ".");
-            String local = matcher.group(3);
-
-            try {
-                return new ExpenseEntity(idGenerator.generate(), parseDouble(amount), local, formatter.parse(date), false);
-            } catch (ParseException e) {
-                throw new InvalidSMSException();
-            }
-        } else {
-            throw new InvalidSMSException();
-        }
-    }
-
-    private static class InvalidSMSException extends RuntimeException {
-
-    }
 
     public interface Presenter {
 
