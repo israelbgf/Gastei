@@ -3,23 +3,19 @@ package israelbgf.gastei.core.usecases;
 import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.entities.SMSParserEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
-import israelbgf.gastei.core.gateways.ExpenseFromSMSGateway;
 import israelbgf.gastei.core.utils.IDGenerator;
 
 import java.util.List;
 
-import static israelbgf.gastei.core.utils.DateUtils.date;
 
 public class ImportNewExpensesUsecase {
     private ExpenseGateway expenseGateway;
-    private final ExpenseFromSMSGateway expenseFromSmsGateway;
     private final Presenter presenter;
     private IDGenerator idGenerator;
 
-    public ImportNewExpensesUsecase(IDGenerator idGenerator, ExpenseGateway expenseGateway, ExpenseFromSMSGateway expenseFromSmsGateway, Presenter presenter) {
+    public ImportNewExpensesUsecase(IDGenerator idGenerator, ExpenseGateway expenseGateway, Presenter presenter) {
         this.idGenerator = idGenerator;
         this.expenseGateway = expenseGateway;
-        this.expenseFromSmsGateway = expenseFromSmsGateway;
         this.presenter = presenter;
     }
 

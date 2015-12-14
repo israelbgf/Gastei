@@ -2,7 +2,6 @@ package israelbgf.gastei.core;
 
 import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
-import israelbgf.gastei.core.gateways.ExpenseFromSMSGateway;
 import israelbgf.gastei.core.usecases.ImportNewExpensesUsecase;
 import israelbgf.gastei.core.utils.IDGenerator;
 import org.junit.After;
@@ -18,10 +17,9 @@ import static org.mockito.Mockito.*;
 public class ImportNewExpensesUsecaseShould {
 
     IDGenerator idGenerator = mock(IDGenerator.class);
-    ExpenseFromSMSGateway expenseFromSmsGateway = mock(ExpenseFromSMSGateway.class);
     ExpenseGateway expenseGateway = mock(ExpenseGateway.class);
     ImportNewExpensesUsecase.Presenter presenter = mock(ImportNewExpensesUsecase.Presenter.class);
-    ImportNewExpensesUsecase usecase = new ImportNewExpensesUsecase(idGenerator, expenseGateway, expenseFromSmsGateway, presenter);
+    ImportNewExpensesUsecase usecase = new ImportNewExpensesUsecase(idGenerator, expenseGateway, presenter);
 
     @Before
     public void before(){
