@@ -30,9 +30,7 @@ public class ImportNewExpensesUsecaseShould {
 
     @Test
     public void presentNoExpensesToImportWhenThereAreNothingToImport() {
-        when(expenseFromSmsGateway.retrieveAllExpenseSMSs()).thenReturn(Collections.<String>emptyList());
-
-        usecase.importExisting();
+        usecase.importExisting(Collections.<String>emptyList());
 
         verify(presenter).nothingToImport();
     }
@@ -41,9 +39,8 @@ public class ImportNewExpensesUsecaseShould {
     public void importOneExpenseWhenThereAreOneToImport() {
         final int ONE_EXPENSE = 1;
         when(expenseGateway.contains(anyExpense())).thenReturn(false);
-        when(expenseFromSmsGateway.retrieveAllExpenseSMSs()).thenReturn(asList(newSMS("ANGELONI")));
 
-        usecase.importExisting();
+        usecase.importExisting(asList(newSMS("ANGELONI")));
 
         verify(expenseGateway).save(newEntity("ANGELONI"));
         verify(presenter).imported(ONE_EXPENSE);
@@ -54,12 +51,11 @@ public class ImportNewExpensesUsecaseShould {
         final int TWO_EXPENSES = 2;
 
         when(expenseGateway.contains(anyExpense())).thenReturn(false);
-        when(expenseFromSmsGateway.retrieveAllExpenseSMSs()).thenReturn(asList(
-                newSMS("ANGELONI"),
-                newSMS("GIASSI")
-        ));
 
-        usecase.importExisting();
+        usecase.importExisting(asList(
+            newSMS("ANGELONI"),
+            newSMS("GIASSI")
+        ));
 
         verify(expenseGateway).save(newEntity("ANGELONI"));
         verify(expenseGateway).save(newEntity("GIASSI"));
@@ -71,11 +67,7 @@ public class ImportNewExpensesUsecaseShould {
         when(expenseGateway.contains(newEntity("ANGELONI")))
                 .thenReturn(true);
 
-        when(expenseFromSmsGateway.retrieveAllExpenseSMSs()).thenReturn(asList(
-                newSMS("ANGELONI")
-        ));
-
-        usecase.importExisting();
+        usecase.importExisting(asList(newSMS("ANGELONI")));
 
         verify(expenseGateway, never()).save(anyExpense());
         verify(presenter).nothingToImport();

@@ -23,8 +23,7 @@ public class ImportNewExpensesUsecase {
         this.presenter = presenter;
     }
 
-    public void importExisting() {
-        List<String> smssToParse = expenseFromSmsGateway.retrieveAllExpenseSMSs();
+    public void importExisting(List<String> smssToParse) {
         int importedQuantity = 0;
 
         if(!smssToParse.isEmpty()){
