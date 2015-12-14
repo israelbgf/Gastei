@@ -78,4 +78,38 @@ public class ExpenseGatewayRealmShould extends ApplicationTestCase<Application> 
         assertTrue(storedExpense.isShared());
     }
 
+    public void testContainsWhenHaveSamePlaceDateAndAmount(){
+        Date january = DateUtils.date(2015, 1);
+        ExpenseEntity giassiExpense = new ExpenseEntity(UUID.randomUUID().toString(), 10, "Giassi", january, false);
+        gateway.save(giassiExpense);
+
+        assertTrue(gateway.contains(giassiExpense));
+    }
+
+    public void testDoesNotContainWhenPlaceIsDifferent(){
+        Date january = DateUtils.date(2015, 1);
+        ExpenseEntity giassiExpense = new ExpenseEntity(UUID.randomUUID().toString(), 10, "Giassi", january, false);
+        gateway.save(giassiExpense);
+
+        assertFalse(gateway.contains(new ExpenseEntity(UUID.randomUUID().toString(), 10, "Angeloni", january, false)));
+    }
+
+    public void testDoesNotContainWhenDateIsDifferent(){
+        Date january = DateUtils.date(2015, 1);
+        Date februrary = DateUtils.date(2015, 2);
+        ExpenseEntity giassiExpense = new ExpenseEntity(UUID.randomUUID().toString(), 10, "Giassi", january, false);
+        gateway.save(giassiExpense);
+
+        assertFalse(gateway.contains(new ExpenseEntity(UUID.randomUUID().toString(), 10, "Giassi", februrary, false)));
+    }
+
+    public void testDoesNotContainWhenAmountIsDifferent(){
+        Date january = DateUtils.date(2015, 1);
+        ExpenseEntity giassiExpense = new ExpenseEntity(UUID.randomUUID().toString(), 10, "Giassi", january, false);
+        gateway.save(giassiExpense);
+
+        assertFalse(gateway.contains(new ExpenseEntity(UUID.randomUUID().toString(), 20, "Giassi", january, false)));
+    }
+
+
 }
