@@ -1,0 +1,29 @@
+package israelbgf.gastei.mobile.presenters;
+
+import android.content.Context;
+import android.widget.Toast;
+import israelbgf.gastei.core.usecases.ImportNewExpensesUsecase;
+
+import static android.widget.Toast.LENGTH_LONG;
+import static israelbgf.gastei.core.usecases.RegisterExpenseFromSMSUsecase.BRADESCO_SMS_NUMBER;
+import static java.lang.String.format;
+
+public class ImportNewExpensesPresenter implements ImportNewExpensesUsecase.Presenter {
+    private Context context;
+
+    public ImportNewExpensesPresenter(Context context) {
+        this.context = context;
+    }
+
+    @Override
+    public void nothingToImport() {
+        Toast.makeText(context,
+                format("No expenses to be imported (SMS Number: %s)", BRADESCO_SMS_NUMBER), LENGTH_LONG).show();
+    }
+
+    @Override
+    public void imported(int quantity) {
+        Toast.makeText(context,
+                format("Imported %s SMSs", quantity), LENGTH_LONG).show();
+    }
+}

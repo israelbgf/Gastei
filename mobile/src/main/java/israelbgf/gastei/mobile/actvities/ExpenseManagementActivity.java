@@ -4,20 +4,22 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
+import israelbgf.gastei.core.usecases.ImportNewExpensesUsecase;
 import israelbgf.gastei.core.usecases.ListMonthlyExpensesUsecase;
+import israelbgf.gastei.core.usecases.RegisterExpenseFromSMSUsecase;
 import israelbgf.gastei.mobile.R;
+import israelbgf.gastei.mobile.factories.ImportNewExpensesUsecaseFactory;
 import israelbgf.gastei.mobile.factories.ListMonthlyExpensesUsecaseFactory;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 import static israelbgf.gastei.core.utils.DateUtils.monthOf;
 import static israelbgf.gastei.core.utils.DateUtils.yearOf;
@@ -26,6 +28,7 @@ import static israelbgf.gastei.core.utils.DateUtils.yearOf;
 public class ExpenseManagementActivity extends Activity {
 
     ListMonthlyExpensesUsecase listMonthlyUsecase;
+    ImportNewExpensesUsecase importNewExpensesUsecase;
 
     int chosenYear = yearOf(new Date());
     int chosenMonth = monthOf(new Date());
@@ -34,6 +37,7 @@ public class ExpenseManagementActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         listMonthlyUsecase  = ListMonthlyExpensesUsecaseFactory.make(this);
+        importNewExpensesUsecase = ImportNewExpensesUsecaseFactory.make(this);
     }
 
     @Override
@@ -74,11 +78,27 @@ public class ExpenseManagementActivity extends Activity {
                 listMonthlyExpenses();
                 return true;
             case R.id.action_reimport:
-                Toast.makeText(this, "Re-importing data from Bradesco SMSs", Toast.LENGTH_SHORT).show();
+                importNewExpensesUsecase.importExisting(messagesFromPhone());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private List<String> messagesFromPhone() {
+        String[] selection = new String[] { RegisterExpenseFromSMSUsecase.BRADESCO_SMS_NUMBER };
+        Cursor cursor = getContentResolver().query(
+                Uri.parse("content://sms/inbox"), new String[] {"body"}, "address=?", selection, null);
+
+        List<String> messages = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                messages.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return messages;
     }
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
@@ -86,13 +106,13 @@ public class ExpenseManagementActivity extends Activity {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             ExpenseManagementActivity activity = getExpenseManagementActivity();
-            return new DatePickerDialog(activity, this, activity.chosenYear, activity.chosenMonth, 1);
+            return new DatePickerDialog(activity, this, activity.chosenYear, activity.chosenMonth - 1, 1);
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             ExpenseManagementActivity activity = getExpenseManagementActivity();
             activity.chosenYear = year;
-            activity.chosenMonth = month;
+            activity.chosenMonth = month + 1;
 
             activity.listMonthlyExpenses();
 
@@ -107,7 +127,7 @@ public class ExpenseManagementActivity extends Activity {
         public static String getFormattedDate(int year, int month) {
             final Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.MONTH, month - 1);
 
             String monthDisplay = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
             return monthDisplay + "/" + year;
