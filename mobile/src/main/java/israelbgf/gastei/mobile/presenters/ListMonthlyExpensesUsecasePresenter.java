@@ -32,6 +32,7 @@ public class ListMonthlyExpensesUsecasePresenter implements Presenter {
     public void presentExpenses(Struct struct) {
         activity.setContentView(R.layout.expense_list);
         setupRecyclerView(createSectionedExpenseAdapter(struct));
+        setupFooter(struct);
     }
 
     private void setupRecyclerView(SectionedRecyclerViewAdapter adapter) {
@@ -39,6 +40,14 @@ public class ListMonthlyExpensesUsecasePresenter implements Presenter {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
+    }
+
+    private void setupFooter(Struct struct) {
+        TextView totalAmount = (TextView) activity.findViewById(R.id.total_amount);
+        totalAmount.setText(CURRENCY_FORMATTER.format(struct.totalAmount));
+
+        TextView totalShared = (TextView) activity.findViewById(R.id.total_shared);
+        totalShared.setText(CURRENCY_FORMATTER.format(struct.sharedAmount));
     }
 
     private SectionedRecyclerViewAdapter createSectionedExpenseAdapter(Struct struct) {

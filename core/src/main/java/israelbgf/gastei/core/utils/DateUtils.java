@@ -46,7 +46,7 @@ public class DateUtils {
     public static int monthOf(Date date){
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(date);
-        return calendar.get(Calendar.MONTH);
+        return calendar.get(Calendar.MONTH) + 1;
     }
 
     public static int yearOf(Date date){
