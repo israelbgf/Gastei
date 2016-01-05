@@ -6,7 +6,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import israelbgf.gastei.core.entities.ExpenseEntity;
 import israelbgf.gastei.core.utils.DateUtils;
-import israelbgf.gastei.mobile.gateways.ExpenseGatewayRealm;
+import israelbgf.gastei.mobile.gateways.realm.ExpenseGatewayRealm;
 import israelbgf.gastei.mobile.gateways.realm.ExpenseRealm;
 
 import java.util.Date;

@@ -4,7 +4,7 @@ import android.content.Context;
 import io.realm.Realm;
 import israelbgf.gastei.core.usecases.ImportNewExpensesUsecase;
 import israelbgf.gastei.core.utils.IDGenerator;
-import israelbgf.gastei.mobile.gateways.ExpenseGatewayRealm;
+import israelbgf.gastei.mobile.gateways.realm.ExpenseGatewayRealm;
 import israelbgf.gastei.mobile.presenters.ImportNewExpensesPresenter;
 
 public class ImportNewExpensesUsecaseFactory {

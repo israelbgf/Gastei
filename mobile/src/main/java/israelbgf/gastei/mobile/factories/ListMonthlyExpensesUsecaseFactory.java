@@ -4,7 +4,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import israelbgf.gastei.core.usecases.ListMonthlyExpensesUsecase;
 import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
-import israelbgf.gastei.mobile.gateways.ExpenseGatewayRealm;
+import israelbgf.gastei.mobile.gateways.realm.ExpenseGatewayRealm;
 import israelbgf.gastei.mobile.presenters.ListMonthlyExpensesUsecasePresenter;
 
 public class ListMonthlyExpensesUsecaseFactory {

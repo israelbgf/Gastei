@@ -4,7 +4,7 @@ import android.content.Context;
 import io.realm.Realm;
 import israelbgf.gastei.core.usecases.RegisterExpenseFromSMSUsecase;
 import israelbgf.gastei.core.utils.IDGenerator;
-import israelbgf.gastei.mobile.gateways.ExpenseGatewayRealm;
+import israelbgf.gastei.mobile.gateways.realm.ExpenseGatewayRealm;
 import israelbgf.gastei.mobile.presenters.RegisterExpenseFromSMSPresenter;
 
 public class RegisterExpenseFromSMSUsecaseFactory {

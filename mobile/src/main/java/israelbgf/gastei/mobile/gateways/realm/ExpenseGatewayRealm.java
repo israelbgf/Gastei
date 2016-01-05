@@ -1,4 +1,4 @@
-package israelbgf.gastei.mobile.gateways;
+package israelbgf.gastei.mobile.gateways.realm;
 
 import io.realm.Realm;
 import io.realm.RealmResults;

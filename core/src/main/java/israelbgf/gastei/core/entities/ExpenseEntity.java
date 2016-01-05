@@ -38,6 +38,10 @@ public class ExpenseEntity {
         this.shared = shared;
     }
 
+    public ExpenseEntity(double amount, String place, Date date, boolean shared) {
+        this(null, amount, place, date, shared);
+    }
+
     @Override
     public String toString() {
         return "ExpenseEntity{" +
