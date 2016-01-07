@@ -1,12 +1,12 @@
-package israelbgf.gastei.core;
+package israelbgf.gastei.core.usecases;
 
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 
-public class MarkExpenseAsSharedUsecase {
+public class MarkExpenseAsShared {
     private final ExpenseGateway gateway;
     private final Presenter presenter;
 
-    public MarkExpenseAsSharedUsecase(ExpenseGateway gateway, Presenter presenter) {
+    public MarkExpenseAsShared(ExpenseGateway gateway, Presenter presenter) {
         this.gateway = gateway;
         this.presenter = presenter;
     }

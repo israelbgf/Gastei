@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import israelbgf.gastei.core.entities.ExpenseEntity;
-import israelbgf.gastei.core.usecases.ListMonthlyExpensesUsecase.Presenter;
+import israelbgf.gastei.core.entities.Expense;
+import israelbgf.gastei.core.usecases.ListMonthlyExpenses.Presenter;
 import israelbgf.gastei.mobile.R;
 import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
 import israelbgf.gastei.mobile.presenters.sectionedview.SectionedRecyclerViewAdapter;
@@ -19,12 +19,12 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ListMonthlyExpensesUsecasePresenter implements Presenter {
+public class ListMonthlyExpensesPresenter implements Presenter {
 
     private static DecimalFormat CURRENCY_FORMATTER = new DecimalFormat("$#.##");
     private ExpenseManagementActivity activity;
 
-    public ListMonthlyExpensesUsecasePresenter(ExpenseManagementActivity activity) {
+    public ListMonthlyExpensesPresenter(ExpenseManagementActivity activity) {
         this.activity = activity;
     }
 
@@ -60,16 +60,16 @@ public class ListMonthlyExpensesUsecasePresenter implements Presenter {
         return sectionedAdapter;
     }
 
-    private List<Section> asAGroupOf(LinkedHashMap<Integer, List<ExpenseEntity>> dailyExpenses) {
+    private List<Section> asAGroupOf(LinkedHashMap<Integer, List<Expense>> dailyExpenses) {
         List<Section> sections = new ArrayList<>();
         if(!dailyExpenses.isEmpty()){
-            LinkedList<List<ExpenseEntity>> dailyExpensesGroups = new LinkedList<>(dailyExpenses.values());
-            ExpenseEntity firstExpenseOfTheMonth = dailyExpensesGroups.getFirst().get(0);
+            LinkedList<List<Expense>> dailyExpensesGroups = new LinkedList<>(dailyExpenses.values());
+            Expense firstExpenseOfTheMonth = dailyExpensesGroups.getFirst().get(0);
             sections.add(new Section(0, dayOfWeek(firstExpenseOfTheMonth.getDate())));
 
             boolean firstDay = true;
             int sectionPosition = 0;
-            for(Map.Entry<Integer, List<ExpenseEntity>> entry : dailyExpenses.entrySet()){
+            for(Map.Entry<Integer, List<Expense>> entry : dailyExpenses.entrySet()){
                 if (firstDay) {
                     sectionPosition += entry.getValue().size();
                     firstDay = false;
@@ -89,11 +89,11 @@ public class ListMonthlyExpensesUsecasePresenter implements Presenter {
     public static class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseHolder> {
 
         private final Context context;
-        private List<ExpenseEntity> expenses = new ArrayList<>();
+        private List<Expense> expenses = new ArrayList<>();
 
-        public ExpenseAdapter(Context context, Collection<List<ExpenseEntity>> expensesGroup) {
+        public ExpenseAdapter(Context context, Collection<List<Expense>> expensesGroup) {
             this.context = context;
-            for(List<ExpenseEntity> expenses : expensesGroup){
+            for(List<Expense> expenses : expensesGroup){
                 this.expenses.addAll(expenses);
             }
         }

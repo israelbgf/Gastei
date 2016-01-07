@@ -1,13 +1,9 @@
 package israelbgf.gastei.mobile.gateways.sqlite;
 
 import android.database.sqlite.SQLiteDatabase;
-import io.realm.Realm;
-import israelbgf.gastei.core.entities.ExpenseEntity;
+import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 import israelbgf.gastei.mobile.BetterContentValues;
-import israelbgf.gastei.mobile.gateways.realm.ExpenseRealm;
-import israelbgf.gastei.mobile.gateways.sqlite.BetterCursor;
-import israelbgf.gastei.mobile.gateways.sqlite.BetterSQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +15,6 @@ import static israelbgf.gastei.mobile.gateways.sqlite.ExpenseTableDefinition.*;
 
 public class ExpenseGatewaySQLite implements ExpenseGateway {
 
-    private Realm realm;
     private BetterSQLiteDatabase database;
 
     public ExpenseGatewaySQLite(SQLiteDatabase database) {
@@ -31,16 +26,18 @@ public class ExpenseGatewaySQLite implements ExpenseGateway {
     }
 
     @Override
-    public void save(ExpenseEntity expense) {
-        database.insert(EXPENSE_TABLE, new BetterContentValues()
+    public void save(Expense expense) {
+        long id = database.insert(EXPENSE_TABLE, new BetterContentValues()
                 .with(AMOUNT, expense.getAmount())
                 .with(PLACE, expense.getPlace())
                 .with(DATE, expense.getDate())
                 .with(SHARED, expense.isShared()));
+
+        expense.setId(id);
     }
 
     @Override
-    public List<ExpenseEntity> retrieveByMonth(int year, int month) {
+    public List<Expense> retrieveByMonth(int year, int month) {
 
         String restriction = "date >= ? and date <= ?";
         String[] restrictionParameters = {
@@ -50,10 +47,10 @@ public class ExpenseGatewaySQLite implements ExpenseGateway {
 
         BetterCursor cursor = database.query(EXPENSE_TABLE, ALL_COLUMNS, restriction, restrictionParameters);
 
-        List<ExpenseEntity> expenses = new ArrayList<>();
+        List<Expense> expenses = new ArrayList<>();
         while(cursor.moveToNext()){
-            expenses.add(new ExpenseEntity(
-                    cursor.getString(_ID),
+            expenses.add(new Expense(
+                    cursor.getLong(_ID),
                     cursor.getDouble(AMOUNT),
                     cursor.getString(PLACE),
                     cursor.getDate(DATE),
@@ -65,22 +62,23 @@ public class ExpenseGatewaySQLite implements ExpenseGateway {
 
     @Override
     public void markExpenseAsShared(String existingExpenseId) {
-        ExpenseRealm expense = realm.where(ExpenseRealm.class)
-            .equalTo("id", existingExpenseId)
-            .findFirst();
-
-        realm.beginTransaction();
-        expense.setShared(true);
-        realm.commitTransaction();
+//        ExpenseRealm expense = realm.where(ExpenseRealm.class)
+//            .equalTo("id", existingExpenseId)
+//            .findFirst();
+//
+//        realm.beginTransaction();
+//        expense.setShared(true);
+//        realm.commitTransaction();
     }
 
     @Override
-    public boolean contains(ExpenseEntity candidate) {
-        return realm.where(ExpenseRealm.class)
-                .equalTo("place", candidate.getPlace())
-                .equalTo("amount", candidate.getAmount())
-                .equalTo("date", candidate.getDate())
-                .count() > 0;
+    public boolean contains(Expense candidate) {
+//        return realm.where(ExpenseRealm.class)
+//                .equalTo("place", candidate.getPlace())
+//                .equalTo("amount", candidate.getAmount())
+//                .equalTo("date", candidate.getDate())
+//                .count() > 0;
+        return false;
     }
 
 }

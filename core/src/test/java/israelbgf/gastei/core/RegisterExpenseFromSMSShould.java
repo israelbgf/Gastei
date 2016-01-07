@@ -1,16 +1,15 @@
 package israelbgf.gastei.core;
 
-import israelbgf.gastei.core.entities.ExpenseEntity;
+import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
-import israelbgf.gastei.core.usecases.RegisterExpenseFromSMSUsecase;
-import israelbgf.gastei.core.utils.IDGenerator;
+import israelbgf.gastei.core.usecases.RegisterExpenseFromSMS;
 import org.junit.After;
 import org.junit.Test;
 
 import static israelbgf.gastei.core.utils.ExpenseFactory.sampleExpense;
 import static org.mockito.Mockito.*;
 
-public class RegisterExpenseFromSMSUsecaseShould {
+public class RegisterExpenseFromSMSShould {
 
     private static final String INVALID_NUMBER = "9999";
 
@@ -20,16 +19,14 @@ public class RegisterExpenseFromSMSUsecaseShould {
     public static final String INVALID_SMS_CONTENT = "MENSAGEM ERRADA";
 
     ExpenseGateway gateway = mock(ExpenseGateway.class);
-    RegisterExpenseFromSMSUsecase.Presenter presenter = mock(RegisterExpenseFromSMSUsecase.Presenter.class);
-    IDGenerator idGenerator = mock(IDGenerator.class);
-    RegisterExpenseFromSMSUsecase usecase = new RegisterExpenseFromSMSUsecase(gateway, presenter, idGenerator);
+    RegisterExpenseFromSMS.Presenter presenter = mock(RegisterExpenseFromSMS.Presenter.class);
+    RegisterExpenseFromSMS usecase = new RegisterExpenseFromSMS(gateway, presenter);
 
     @Test
     public void storeExpenseWhenParseValidSMS() {
-        ExpenseEntity expectedExpense = sampleExpense();
-        when(idGenerator.generate()).thenReturn(expectedExpense.getId());
+        Expense expectedExpense = sampleExpense();
 
-        usecase.receive(RegisterExpenseFromSMSUsecase.BRADESCO_SMS_NUMBER, SMS_CONTENT);
+        usecase.receive(RegisterExpenseFromSMS.BRADESCO_SMS_NUMBER, SMS_CONTENT);
 
         verify(presenter).presentNewExpenseAdded(expectedExpense);
         verify(gateway).save(expectedExpense);
@@ -37,7 +34,7 @@ public class RegisterExpenseFromSMSUsecaseShould {
 
     @Test
     public void notifyErrorWhenParseInvalidSMS() {
-        usecase.receive(RegisterExpenseFromSMSUsecase.BRADESCO_SMS_NUMBER, INVALID_SMS_CONTENT);
+        usecase.receive(RegisterExpenseFromSMS.BRADESCO_SMS_NUMBER, INVALID_SMS_CONTENT);
 
         verify(presenter).presentInvalidSMSContent(INVALID_SMS_CONTENT);
     }

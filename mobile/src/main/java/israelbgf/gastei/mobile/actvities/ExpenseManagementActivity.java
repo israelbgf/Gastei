@@ -12,12 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import israelbgf.gastei.core.usecases.ImportNewExpensesUsecase;
-import israelbgf.gastei.core.usecases.ListMonthlyExpensesUsecase;
-import israelbgf.gastei.core.usecases.RegisterExpenseFromSMSUsecase;
+import israelbgf.gastei.core.usecases.ImportNewExpenses;
+import israelbgf.gastei.core.usecases.ListMonthlyExpenses;
+import israelbgf.gastei.core.usecases.RegisterExpenseFromSMS;
 import israelbgf.gastei.mobile.R;
-import israelbgf.gastei.mobile.factories.ImportNewExpensesUsecaseFactory;
-import israelbgf.gastei.mobile.factories.ListMonthlyExpensesUsecaseFactory;
+import israelbgf.gastei.mobile.factories.ImportNewExpensesFactory;
+import israelbgf.gastei.mobile.factories.ListMonthlyExpensesFactory;
 
 import java.util.*;
 
@@ -27,8 +27,8 @@ import static israelbgf.gastei.core.utils.DateUtils.yearOf;
 
 public class ExpenseManagementActivity extends Activity {
 
-    ListMonthlyExpensesUsecase listMonthlyUsecase;
-    ImportNewExpensesUsecase importNewExpensesUsecase;
+    ListMonthlyExpenses listMonthlyUsecase;
+    ImportNewExpenses importNewExpensesUsecase;
 
     int chosenYear = yearOf(new Date());
     int chosenMonth = monthOf(new Date());
@@ -36,8 +36,8 @@ public class ExpenseManagementActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listMonthlyUsecase  = ListMonthlyExpensesUsecaseFactory.make(this);
-        importNewExpensesUsecase = ImportNewExpensesUsecaseFactory.make(this);
+        listMonthlyUsecase  = ListMonthlyExpensesFactory.make(this);
+        importNewExpensesUsecase = ImportNewExpensesFactory.make(this);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class ExpenseManagementActivity extends Activity {
     }
 
     private List<String> messagesFromPhone() {
-        String[] selection = new String[] { RegisterExpenseFromSMSUsecase.BRADESCO_SMS_NUMBER };
+        String[] selection = new String[] { RegisterExpenseFromSMS.BRADESCO_SMS_NUMBER };
         Cursor cursor = getContentResolver().query(
                 Uri.parse("content://sms/inbox"), new String[] {"body"}, "address=?", selection, null);
 

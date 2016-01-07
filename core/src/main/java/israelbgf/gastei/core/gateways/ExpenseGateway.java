@@ -1,15 +1,16 @@
 package israelbgf.gastei.core.gateways;
 
-import israelbgf.gastei.core.entities.ExpenseEntity;
+import israelbgf.gastei.core.entities.Expense;
 
 import java.util.List;
 
 public interface ExpenseGateway {
-    void save(ExpenseEntity expense);
+    void save(Expense expense);
 
-    List<ExpenseEntity> retrieveByMonth(int year, int month);
+    List<Expense> retrieveByMonth(int year, int month);
 
     void markExpenseAsShared(String existingExpenseId);
 
-    boolean contains(ExpenseEntity candidate);
+    boolean contains(Expense candidate);
+
 }

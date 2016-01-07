@@ -2,13 +2,13 @@ package israelbgf.gastei.mobile.presenters;
 
 import android.content.Context;
 import android.widget.Toast;
-import israelbgf.gastei.core.usecases.ImportNewExpensesUsecase;
+import israelbgf.gastei.core.usecases.ImportNewExpenses;
 
 import static android.widget.Toast.LENGTH_LONG;
-import static israelbgf.gastei.core.usecases.RegisterExpenseFromSMSUsecase.BRADESCO_SMS_NUMBER;
+import static israelbgf.gastei.core.usecases.RegisterExpenseFromSMS.BRADESCO_SMS_NUMBER;
 import static java.lang.String.format;
 
-public class ImportNewExpensesPresenter implements ImportNewExpensesUsecase.Presenter {
+public class ImportNewExpensesPresenter implements ImportNewExpenses.Presenter {
     private Context context;
 
     public ImportNewExpensesPresenter(Context context) {

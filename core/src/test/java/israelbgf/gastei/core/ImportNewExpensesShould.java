@@ -1,11 +1,9 @@
 package israelbgf.gastei.core;
 
-import israelbgf.gastei.core.entities.ExpenseEntity;
+import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
-import israelbgf.gastei.core.usecases.ImportNewExpensesUsecase;
-import israelbgf.gastei.core.utils.IDGenerator;
+import israelbgf.gastei.core.usecases.ImportNewExpenses;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -14,17 +12,11 @@ import static israelbgf.gastei.core.utils.DateUtils.date;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 
-public class ImportNewExpensesUsecaseShould {
+public class ImportNewExpensesShould {
 
-    IDGenerator idGenerator = mock(IDGenerator.class);
     ExpenseGateway expenseGateway = mock(ExpenseGateway.class);
-    ImportNewExpensesUsecase.Presenter presenter = mock(ImportNewExpensesUsecase.Presenter.class);
-    ImportNewExpensesUsecase usecase = new ImportNewExpensesUsecase(idGenerator, expenseGateway, presenter);
-
-    @Before
-    public void before(){
-        when(idGenerator.generate()).thenReturn("ID");
-    }
+    ImportNewExpenses.Presenter presenter = mock(ImportNewExpenses.Presenter.class);
+    ImportNewExpenses usecase = new ImportNewExpenses(expenseGateway, presenter);
 
     @Test
     public void presentNoExpensesToImportWhenThereAreNothingToImport() {
@@ -76,16 +68,16 @@ public class ImportNewExpensesUsecaseShould {
         verifyNoMoreInteractions(presenter);
     }
 
-    private ExpenseEntity anyExpense() {
-        return any(ExpenseEntity.class);
+    private Expense anyExpense() {
+        return any(Expense.class);
     }
 
     private String newSMS(String place) {
         return "BRADESCO CARTOES:COMPRA APROVADA NO CARTAO FINAL 9999 EM 25/10/2015 13:46. VALOR DE $ 156,47 NO(A) " + place;
     }
 
-    private ExpenseEntity newEntity(String place) {
-        return new ExpenseEntity("ID", 156.47, place, date(2015, 10, 25, 13, 46), false);
+    private Expense newEntity(String place) {
+        return new Expense(156.47, place, date(2015, 10, 25, 13, 46), false);
     }
 
 

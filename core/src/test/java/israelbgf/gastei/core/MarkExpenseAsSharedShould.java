@@ -1,6 +1,7 @@
 package israelbgf.gastei.core;
 
 import israelbgf.gastei.core.gateways.ExpenseGateway;
+import israelbgf.gastei.core.usecases.MarkExpenseAsShared;
 import org.junit.After;
 import org.junit.Test;
 
@@ -8,13 +9,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-public class MarkExpenseAsSharedUsecaseShould {
+public class MarkExpenseAsSharedShould {
 
     private static final String EXISTING_EXPENSE_ID = "ID";
 
     final ExpenseGateway gateway = mock(ExpenseGateway.class);
-    final MarkExpenseAsSharedUsecase.Presenter presenter = mock(MarkExpenseAsSharedUsecase.Presenter.class);
-    MarkExpenseAsSharedUsecase usecase = new MarkExpenseAsSharedUsecase(gateway, presenter);
+    final MarkExpenseAsShared.Presenter presenter = mock(MarkExpenseAsShared.Presenter.class);
+    MarkExpenseAsShared usecase = new MarkExpenseAsShared(gateway, presenter);
 
     @Test
     public void markExistingExpenseAsShared() {

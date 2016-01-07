@@ -7,11 +7,11 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
-import israelbgf.gastei.core.entities.ExpenseEntity;
-import israelbgf.gastei.core.usecases.RegisterExpenseFromSMSUsecase;
+import israelbgf.gastei.core.entities.Expense;
+import israelbgf.gastei.core.usecases.RegisterExpenseFromSMS;
 import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
 
-public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMSUsecase.Presenter {
+public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMS.Presenter {
     private Context context;
 
     public RegisterExpenseFromSMSPresenter(Context context) {
@@ -24,7 +24,7 @@ public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMSUs
     }
 
     @Override
-    public void presentNewExpenseAdded(ExpenseEntity expenseAdded) {
+    public void presentNewExpenseAdded(Expense expenseAdded) {
         Notification.Builder notificationBuilder =
                 new Notification.Builder(context)
                         .setSmallIcon(android.R.drawable.ic_dialog_info)
