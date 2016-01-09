@@ -40,12 +40,9 @@ public class ExpenseGatewaySQLite implements ExpenseGateway {
     public List<Expense> retrieveByMonth(int year, int month) {
 
         String restriction = "date >= ? and date <= ?";
-        String[] restrictionParameters = {
-                String.valueOf(firstDayOf(year, month).getTime()),
-                String.valueOf(lastDayOf(year, month).getTime())
-        };
-
-        BetterCursor cursor = database.query(EXPENSE_TABLE, ALL_COLUMNS, restriction, restrictionParameters);
+        BetterCursor cursor = database.query(EXPENSE_TABLE, ALL_COLUMNS, restriction,
+                firstDayOf(year, month).getTime(),
+                lastDayOf(year, month).getTime());
 
         List<Expense> expenses = new ArrayList<>();
         while(cursor.moveToNext()){
@@ -62,23 +59,19 @@ public class ExpenseGatewaySQLite implements ExpenseGateway {
 
     @Override
     public void markExpenseAsShared(String existingExpenseId) {
-//        ExpenseRealm expense = realm.where(ExpenseRealm.class)
-//            .equalTo("id", existingExpenseId)
-//            .findFirst();
-//
-//        realm.beginTransaction();
-//        expense.setShared(true);
-//        realm.commitTransaction();
+        database.update(EXPENSE_TABLE, new BetterContentValues().with(SHARED, true), "_id = ?", existingExpenseId);
     }
 
     @Override
     public boolean contains(Expense candidate) {
-//        return realm.where(ExpenseRealm.class)
-//                .equalTo("place", candidate.getPlace())
-//                .equalTo("amount", candidate.getAmount())
-//                .equalTo("date", candidate.getDate())
-//                .count() > 0;
-        return false;
+        BetterCursor cursor = database.query(EXPENSE_TABLE, projection(_ID),
+                "place = ? and amount = ? and date = ?",
+                candidate.getPlace(), candidate.getAmount(), candidate.getDate().getTime());
+        return cursor.moveToNext();
+    }
+
+    private String[] projection(String... projection) {
+        return projection;
     }
 
 }

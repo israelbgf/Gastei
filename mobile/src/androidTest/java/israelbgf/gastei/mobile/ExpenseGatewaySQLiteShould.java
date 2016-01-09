@@ -3,7 +3,6 @@ package israelbgf.gastei.mobile;
 import android.app.Application;
 import android.test.ApplicationTestCase;
 import israelbgf.gastei.core.entities.Expense;
-import israelbgf.gastei.core.utils.DateUtils;
 import israelbgf.gastei.mobile.gateways.sqlite.ExpenseGatewaySQLite;
 import israelbgf.gastei.mobile.gateways.sqlite.BetterCursor;
 import israelbgf.gastei.mobile.gateways.sqlite.DatabaseConnection;
@@ -13,6 +12,7 @@ import israelbgf.gastei.mobile.gateways.sqlite.ExpenseTableDefinition;
 import java.util.Date;
 import java.util.List;
 
+import static israelbgf.gastei.core.utils.DateUtils.date;
 import static israelbgf.gastei.mobile.gateways.sqlite.ExpenseTableDefinition.*;
 
 public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application> {
@@ -33,7 +33,7 @@ public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application>
     }
 
     public void testPersistenceInDatabase() {
-        Expense expense = new Expense(20.57, "Giassi", DateUtils.date(2015, 12), true);
+        Expense expense = new Expense(20.57, "Giassi", date(2015, 12), true);
 
         gateway.save(expense);
 
@@ -49,22 +49,11 @@ public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application>
     }
 
     public void testRetrievalByMonth() {
-        Date january = DateUtils.date(2015, 1);
-        Date februrary = DateUtils.date(2015, 2);
-        Expense giassiExpense = new Expense(10, "Giassi", january, true);
+        Expense giassiExpense = new Expense(10, "Giassi", date(2015, 1), true);
+        Expense otherExpense = new Expense(20, "This guy shouldnt bre retrivied", date(2015, 2), true);
 
-        database.insert(EXPENSE_TABLE, new BetterContentValues()
-                                                .with(AMOUNT, giassiExpense.getAmount())
-                                                .with(PLACE, giassiExpense.getPlace())
-                                                .with(DATE, giassiExpense.getDate())
-                                                .with(SHARED, giassiExpense.isShared()));
-
-        database.insert(EXPENSE_TABLE, new BetterContentValues()
-                                                .with(AMOUNT, 20)
-                                                .with(PLACE, "This guy shouldnt be retrivied")
-                                                .with(DATE, februrary)
-                                                .with(SHARED, true));
-
+        createExpense(giassiExpense);
+        createExpense(otherExpense);
 
         List<Expense> expenses = gateway.retrieveByMonth(2015, 1);
 
@@ -79,15 +68,9 @@ public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application>
     }
 
     public void testMarkAsShared() {
-        Date january = DateUtils.date(2015, 1);
+        Date january = date(2015, 1);
         Expense giassiExpense = new Expense(10, "Giassi", january, false);
-
-        long id = database.insert(EXPENSE_TABLE, new BetterContentValues()
-                .with(AMOUNT, giassiExpense.getAmount())
-                .with(PLACE, giassiExpense.getPlace())
-                .with(DATE, giassiExpense.getDate())
-                .with(SHARED, giassiExpense.isShared()));
-
+        long id = createExpense(giassiExpense);
 
         gateway.markExpenseAsShared(String.valueOf(id));
 
@@ -96,38 +79,44 @@ public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application>
         assertTrue(cursor.getBoolean(SHARED));
     }
 
-//    public void testContainsWhenHaveSamePlaceDateAndAmount(){
-//        Date january = DateUtils.date(2015, 1);
-//        ExpenseStruct giassiExpense = new ExpenseStruct(UUID.randomUUID().toString(), 10, "Giassi", january, false);
-//        gateway.save(giassiExpense);
-//
-//        assertTrue(gateway.contains(giassiExpense));
-//    }
-//
-//    public void testDoesNotContainWhenPlaceIsDifferent(){
-//        Date january = DateUtils.date(2015, 1);
-//        ExpenseStruct giassiExpense = new ExpenseStruct(UUID.randomUUID().toString(), 10, "Giassi", january, false);
-//        gateway.save(giassiExpense);
-//
-//        assertFalse(gateway.contains(new ExpenseStruct(UUID.randomUUID().toString(), 10, "Angeloni", january, false)));
-//    }
-//
-//    public void testDoesNotContainWhenDateIsDifferent(){
-//        Date january = DateUtils.date(2015, 1);
-//        Date februrary = DateUtils.date(2015, 2);
-//        ExpenseStruct giassiExpense = new ExpenseStruct(UUID.randomUUID().toString(), 10, "Giassi", january, false);
-//        gateway.save(giassiExpense);
-//
-//        assertFalse(gateway.contains(new ExpenseStruct(UUID.randomUUID().toString(), 10, "Giassi", februrary, false)));
-//    }
-//
-//    public void testDoesNotContainWhenAmountIsDifferent(){
-//        Date january = DateUtils.date(2015, 1);
-//        ExpenseStruct giassiExpense = new ExpenseStruct(UUID.randomUUID().toString(), 10, "Giassi", january, false);
-//        gateway.save(giassiExpense);
-//
-//        assertFalse(gateway.contains(new ExpenseStruct(UUID.randomUUID().toString(), 20, "Giassi", january, false)));
-//    }
+    private long createExpense(Expense giassiExpense) {
+        return database.insert(EXPENSE_TABLE, new BetterContentValues()
+                .with(AMOUNT, giassiExpense.getAmount())
+                .with(PLACE, giassiExpense.getPlace())
+                .with(DATE, giassiExpense.getDate())
+                .with(SHARED, giassiExpense.isShared()));
+    }
+
+    public void testContainsWhenHaveSamePlaceDateAndAmount(){
+        Expense giassiExpense = new Expense(10, "Giassi", date(2015, 1), false);
+        gateway.save(giassiExpense);
+
+        assertTrue(gateway.contains(giassiExpense));
+    }
+
+    public void testDoesNotContainWhenPlaceIsDifferent(){
+        Expense giassiExpense = new Expense(10, "Giassi", date(2015, 1), false);
+        Expense angeloniExpense = new Expense(10, "Angeloni", date(2015, 1), false);
+        gateway.save(giassiExpense);
+
+        assertFalse(gateway.contains(angeloniExpense));
+    }
+
+    public void testDoesNotContainWhenDateIsDifferent(){
+        Expense januaryExpense = new Expense(10, "Giassi", date(2015, 1), false);
+        Expense februraryExpense = new Expense(10, "Giassi", date(2015, 2), false);
+        gateway.save(januaryExpense);
+
+        assertFalse(gateway.contains(februraryExpense));
+    }
+
+    public void testDoesNotContainWhenAmountIsDifferent(){
+        Expense tenBucksExpense = new Expense(10, "Giassi", date(2015, 1), false);
+        Expense twentyBucksExpense = new Expense(20, "Giassi", date(2015, 2), false);
+        gateway.save(tenBucksExpense);
+
+        assertFalse(gateway.contains(twentyBucksExpense));
+    }
 
 
 }
