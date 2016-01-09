@@ -40,7 +40,7 @@ public class ExpenseGatewaySQLite implements ExpenseGateway {
     public List<Expense> retrieveByMonth(int year, int month) {
 
         String restriction = "date >= ? and date <= ?";
-        BetterCursor cursor = database.query(EXPENSE_TABLE, ALL_COLUMNS, restriction,
+        BetterCursor cursor = database.query(EXPENSE_TABLE, ALL_COLUMNS, restriction, null, null, DATE + " desc",
                 firstDayOf(year, month).getTime(),
                 lastDayOf(year, month).getTime());
 

@@ -52,8 +52,8 @@ public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application>
         Expense giassiExpense = new Expense(10, "Giassi", date(2015, 1), true);
         Expense otherExpense = new Expense(20, "This guy shouldnt bre retrivied", date(2015, 2), true);
 
-        createExpense(giassiExpense);
-        createExpense(otherExpense);
+        gateway.save(giassiExpense);
+        gateway.save(otherExpense);
 
         List<Expense> expenses = gateway.retrieveByMonth(2015, 1);
 
@@ -67,24 +67,29 @@ public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application>
 
     }
 
+    public void testRetrievalByMonthOrderedByMostRecent(){
+        Expense recent = new Expense(10, "Should be the first", date(2015, 1, 2), false);
+        Expense oldest = new Expense(20, "Should be the second", date(2015, 1, 1), false);
+        gateway.save(oldest);
+        gateway.save(recent);
+
+        List<Expense> expenses = gateway.retrieveByMonth(2015, 1);
+
+        assertEquals(recent.getId(), expenses.get(0).getId());
+        assertEquals(oldest.getId(), expenses.get(1).getId());
+    }
+
+
     public void testMarkAsShared() {
         Date january = date(2015, 1);
         Expense giassiExpense = new Expense(10, "Giassi", january, false);
-        long id = createExpense(giassiExpense);
+        gateway.save(giassiExpense);
 
-        gateway.markExpenseAsShared(String.valueOf(id));
+        gateway.markExpenseAsShared(giassiExpense.getId().toString());
 
         BetterCursor cursor = database.query(EXPENSE_TABLE, ExpenseTableDefinition.ALL_COLUMNS);
         cursor.moveToFirst();
         assertTrue(cursor.getBoolean(SHARED));
-    }
-
-    private long createExpense(Expense giassiExpense) {
-        return database.insert(EXPENSE_TABLE, new BetterContentValues()
-                .with(AMOUNT, giassiExpense.getAmount())
-                .with(PLACE, giassiExpense.getPlace())
-                .with(DATE, giassiExpense.getDate())
-                .with(SHARED, giassiExpense.isShared()));
     }
 
     public void testContainsWhenHaveSamePlaceDateAndAmount(){
@@ -117,6 +122,5 @@ public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application>
 
         assertFalse(gateway.contains(twentyBucksExpense));
     }
-
 
 }

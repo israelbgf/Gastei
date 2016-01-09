@@ -27,6 +27,10 @@ public class BetterSQLiteDatabase {
         return new BetterCursor(database.query(tableName, projection, restriction, restrictionParameters(parameters), null, null, null));
     }
 
+    public BetterCursor query(String tableName, String[] projection, String restriction, String groupBy, String having, String orderBy, Object... parameters) {
+        return new BetterCursor(database.query(tableName, projection, restriction, restrictionParameters(parameters), groupBy, having, orderBy));
+    }
+
     private String[] restrictionParameters(Object[] parameters) {
         String[] processedParameters = new String[parameters.length];
         for(int i = 0; i < parameters.length; i++)
