@@ -1,4 +1,4 @@
-package israelbgf.gastei.core;
+package israelbgf.gastei.core.usecases;
 
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 import israelbgf.gastei.core.usecases.MarkExpenseAsShared;

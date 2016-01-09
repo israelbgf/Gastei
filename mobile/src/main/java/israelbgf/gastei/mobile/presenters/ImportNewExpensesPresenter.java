@@ -20,7 +20,7 @@ public class ImportNewExpensesPresenter implements ImportNewExpenses.Presenter {
     @Override
     public void parsingProblem(String invalidSMS) {
         Log.e("ParsingProblem", invalidSMS);
-        Toast.makeText(context, format("Invalid SMS: " + invalidSMS, BRADESCO_SMS_NUMBER), LENGTH_SHORT).show();
+        Toast.makeText(context, format("Invalid SMS: " + invalidSMS, BRADESCO_SMS_NUMBER), LENGTH_LONG).show();
 
     }
 

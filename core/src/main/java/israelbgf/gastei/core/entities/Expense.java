@@ -42,6 +42,10 @@ public class Expense {
         this.shared = shared;
     }
 
+    public Expense(double amount, String place, Date date) {
+        this(null, amount, place, date, false);
+    }
+
     public Expense(double amount, String place, Date date, boolean shared) {
         this(null, amount, place, date, shared);
     }

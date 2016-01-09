@@ -1,8 +1,7 @@
-package israelbgf.gastei.core;
+package israelbgf.gastei.core.usecases;
 
 import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
-import israelbgf.gastei.core.usecases.ImportNewExpenses;
 import org.junit.After;
 import org.junit.Test;
 
@@ -10,7 +9,6 @@ import java.util.Collections;
 
 import static israelbgf.gastei.core.utils.DateUtils.date;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class ImportNewExpensesShould {

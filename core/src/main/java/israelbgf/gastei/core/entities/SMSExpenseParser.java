@@ -1,10 +1,8 @@
 package israelbgf.gastei.core.entities;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static java.lang.Double.parseDouble;
 
@@ -12,30 +10,68 @@ public class SMSExpenseParser {
 
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.getDefault());
 
-    public Expense parseExpenseFrom(String message) {
-        Pattern pattern = Pattern.compile(".*EM\\s(.*)\\$\\s(.*)\\sNO\\(A\\)\\s(.*)");
-        Matcher matcher = pattern.matcher(message);
+    public Expense parseExpenseFrom(String smsContent) {
+        return new Expense(
+                parseAmount(smsContent),
+                parsePlace(smsContent),
+                parseDate(smsContent)
+        );
+    }
 
-        if (matcher.find()) {
-            String date = matcher.group(1);
-            String amount = matcher.group(2).replace(",", ".");
-            String local = matcher.group(3);
-
-            try {
-                return new Expense(parseDouble(amount), local, formatter.parse(date), false);
-            } catch (ParseException e) {
-                throw new InvalidSMSException(message);
-            }
-        } else {
-            throw new InvalidSMSException(message);
+    private double parseAmount(String smsContent) {
+        try {
+            int amountStart = smsContent.indexOf("$") + 2;
+            int amountEnd = smsContent.indexOf(" ", amountStart);
+            String amount = smsContent.substring(amountStart, amountEnd);
+            amount = amount.replace(".", "").replace(",", ".");
+            return parseDouble(amount);
+        } catch (Exception e) {
+            throw new InvalidSMSException(smsContent, e);
         }
     }
 
+    private String parsePlace(String smsContent) {
+        int placeStart = smsContent.indexOf("NO(A)") + 5;
+        String place = smsContent.substring(placeStart);
+        place = removeDuplicatedWhiteSpaces(place);
+        place = removeFinishingPeriod(place);
+        return place.trim();
+    }
+
+    private String removeFinishingPeriod(String place) {
+        if(place.charAt(place.length() - 1) == '.')
+            place = place.substring(0, place.length() - 1);
+        return place;
+    }
+
+    private String removeDuplicatedWhiteSpaces(String place) {
+        place = place.replaceAll("\\s+", " ");
+        return place;
+    }
+
+    private Date parseDate(String smsContent) {
+        int dateStart = smsContent.indexOf("EM ") + 3;
+        int dateEnd = dateStart + 16;
+        try {
+            return formatter.parse(smsContent.substring(dateStart, dateEnd));
+        } catch (Exception e) {
+            throw new InvalidSMSException(smsContent, e);
+        }
+    }
 
     public static class InvalidSMSException extends RuntimeException {
 
-        public InvalidSMSException(String message) {
-            super(message);
+        private final String smsContent;
+
+        public InvalidSMSException(String smsContent, Exception e) {
+            super(e);
+            this.smsContent = smsContent;
+        }
+
+        @Override
+        public String toString() {
+            return smsContent + "\n>>> " + super.toString();
         }
     }
+
 }

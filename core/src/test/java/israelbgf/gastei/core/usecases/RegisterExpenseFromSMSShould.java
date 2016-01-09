@@ -1,8 +1,7 @@
-package israelbgf.gastei.core;
+package israelbgf.gastei.core.usecases;
 
 import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
-import israelbgf.gastei.core.usecases.RegisterExpenseFromSMS;
 import org.junit.After;
 import org.junit.Test;
 
