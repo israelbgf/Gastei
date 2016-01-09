@@ -9,7 +9,7 @@ public interface ExpenseGateway {
 
     List<Expense> retrieveByMonth(int year, int month);
 
-    void markExpenseAsShared(String existingExpenseId);
+    void markExpenseAsShared(long existingExpenseId);
 
     boolean contains(Expense candidate);
 

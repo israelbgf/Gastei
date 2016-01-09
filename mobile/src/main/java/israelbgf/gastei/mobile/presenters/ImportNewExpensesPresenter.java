@@ -1,10 +1,12 @@
 package israelbgf.gastei.mobile.presenters;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 import israelbgf.gastei.core.usecases.ImportNewExpenses;
 
 import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.LENGTH_SHORT;
 import static israelbgf.gastei.core.usecases.RegisterExpenseFromSMS.BRADESCO_SMS_NUMBER;
 import static java.lang.String.format;
 
@@ -13,6 +15,13 @@ public class ImportNewExpensesPresenter implements ImportNewExpenses.Presenter {
 
     public ImportNewExpensesPresenter(Context context) {
         this.context = context;
+    }
+
+    @Override
+    public void parsingProblem(String invalidSMS) {
+        Log.e("ParsingProblem", invalidSMS);
+        Toast.makeText(context, format("Invalid SMS: " + invalidSMS, BRADESCO_SMS_NUMBER), LENGTH_SHORT).show();
+
     }
 
     @Override

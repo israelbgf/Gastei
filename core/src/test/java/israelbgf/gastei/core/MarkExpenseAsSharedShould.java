@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class MarkExpenseAsSharedShould {
 
-    private static final String EXISTING_EXPENSE_ID = "ID";
+    private static final long EXISTING_EXPENSE_ID = 1;
 
     final ExpenseGateway gateway = mock(ExpenseGateway.class);
     final MarkExpenseAsShared.Presenter presenter = mock(MarkExpenseAsShared.Presenter.class);

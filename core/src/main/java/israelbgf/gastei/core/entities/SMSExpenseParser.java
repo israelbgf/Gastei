@@ -24,15 +24,18 @@ public class SMSExpenseParser {
             try {
                 return new Expense(parseDouble(amount), local, formatter.parse(date), false);
             } catch (ParseException e) {
-                throw new InvalidSMSException();
+                throw new InvalidSMSException(message);
             }
         } else {
-            throw new InvalidSMSException();
+            throw new InvalidSMSException(message);
         }
     }
 
 
     public static class InvalidSMSException extends RuntimeException {
 
+        public InvalidSMSException(String message) {
+            super(message);
+        }
     }
 }

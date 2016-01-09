@@ -21,10 +21,14 @@ public class ImportNewExpenses {
 
         if(!smssToParse.isEmpty()){
             for(String sms : smssToParse){
-                Expense expense = parse(sms);
-                if(!expenseGateway.contains(expense)) {
-                    expenseGateway.save(expense);
-                    importedQuantity++;
+                try {
+                    Expense expense = parse(sms);
+                    if(!expenseGateway.contains(expense)) {
+                        expenseGateway.save(expense);
+                        importedQuantity++;
+                    }
+                } catch (SMSExpenseParser.InvalidSMSException e) {
+                    presenter.parsingProblem(e.getMessage());
                 }
             }
         }
@@ -40,6 +44,9 @@ public class ImportNewExpenses {
     }
 
     public interface Presenter {
+
+        void parsingProblem(String invalidSMS);
+
         void nothingToImport();
 
         void imported(int quantity);

@@ -11,7 +11,7 @@ public class MarkExpenseAsShared {
         this.presenter = presenter;
     }
 
-    public void mark(String existingExpenseId) {
+    public void mark(long existingExpenseId) {
         gateway.markExpenseAsShared(existingExpenseId);
         presenter.presentExpenseShared();
     }
