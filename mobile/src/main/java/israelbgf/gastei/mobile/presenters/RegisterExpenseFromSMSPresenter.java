@@ -6,10 +6,12 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.Settings;
 import android.widget.Toast;
 import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.usecases.RegisterExpenseFromSMS;
 import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
+import israelbgf.gastei.mobile.receivers.ShareExpenseReceiver;
 
 public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMS.Presenter {
     private Context context;
@@ -29,19 +31,31 @@ public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMS.P
                 new Notification.Builder(context)
                         .setSmallIcon(android.R.drawable.ic_dialog_info)
                         .setContentTitle("There is a new expense!")
+                        .setPriority(Notification.PRIORITY_MAX)
+                        .setWhen(0)
+                        .addAction(android.R.drawable.ic_menu_send, "Share this one", createShareIntent())
                         .setContentText("A new expense with the value of " + expenseAdded.getAmount());
+
         Intent intent = new Intent(context, ExpenseManagementActivity.class);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addNextIntentWithParentStack(intent);
 
-//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(generateRequestCode(), PendingIntent.FLAG_UPDATE_CURRENT);
         notificationBuilder.setContentIntent(pendingIntent);
-
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notificationBuilder.build());
+    }
+
+    private PendingIntent createShareIntent() {
+        Intent intent = new Intent(context , ShareExpenseReceiver.class);
+        PendingIntent pendingIntent  = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return pendingIntent;
+    }
+
+    private int generateRequestCode() {
+        return ((Long)System.currentTimeMillis()).intValue();
     }
 
 }

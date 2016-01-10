@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 public class SwipeableRelativeLayout extends RelativeLayout {
 
 
-    static final int MIN_DISTANCE = 10;
+    static final int MIN_DISTANCE = 50;
 
     private float x1, x2;
     private SwipeListener swipeListener;
