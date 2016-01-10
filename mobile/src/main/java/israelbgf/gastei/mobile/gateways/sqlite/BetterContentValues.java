@@ -1,4 +1,4 @@
-package israelbgf.gastei.mobile;
+package israelbgf.gastei.mobile.gateways.sqlite;
 
 import android.content.ContentValues;
 

@@ -3,7 +3,6 @@ package israelbgf.gastei.mobile.gateways.sqlite;
 import android.database.sqlite.SQLiteDatabase;
 import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
-import israelbgf.gastei.mobile.BetterContentValues;
 
 import java.util.ArrayList;
 import java.util.List;

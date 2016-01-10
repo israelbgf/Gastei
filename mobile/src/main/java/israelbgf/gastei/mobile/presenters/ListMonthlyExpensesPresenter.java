@@ -35,7 +35,6 @@ public class ListMonthlyExpensesPresenter implements Presenter {
 
     @Override
     public void presentExpenses(Struct struct) {
-        activity.setContentView(R.layout.expense_list);
         setupRecyclerView(createSectionedExpenseAdapter(struct));
         setupFooter(struct);
     }

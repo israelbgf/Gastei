@@ -1,16 +1,11 @@
 package israelbgf.gastei.mobile.actvities;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.DatePicker;
 import android.widget.TextView;
 import israelbgf.gastei.core.usecases.ImportNewExpenses;
 import israelbgf.gastei.core.usecases.ListMonthlyExpenses;
@@ -18,6 +13,7 @@ import israelbgf.gastei.core.usecases.RegisterExpenseFromSMS;
 import israelbgf.gastei.mobile.R;
 import israelbgf.gastei.mobile.factories.ImportNewExpensesFactory;
 import israelbgf.gastei.mobile.factories.ListMonthlyExpensesFactory;
+import israelbgf.gastei.mobile.widgets.SwipeableRelativeLayout;
 
 import java.util.*;
 
@@ -25,7 +21,9 @@ import static israelbgf.gastei.core.utils.DateUtils.monthOf;
 import static israelbgf.gastei.core.utils.DateUtils.yearOf;
 
 
-public class ExpenseManagementActivity extends Activity {
+public class ExpenseManagementActivity extends Activity implements SwipeableRelativeLayout.SwipeListener {
+
+    TextView currentDate;
 
     ListMonthlyExpenses listMonthlyUsecase;
     ImportNewExpenses importNewExpensesUsecase;
@@ -36,6 +34,9 @@ public class ExpenseManagementActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.expense_list);
+        ((SwipeableRelativeLayout)findViewById(R.id.main_layout)).setOnSwipeListener(this);
+
         listMonthlyUsecase  = ListMonthlyExpensesFactory.make(this);
         importNewExpensesUsecase = ImportNewExpensesFactory.make(this);
     }
@@ -46,28 +47,12 @@ public class ExpenseManagementActivity extends Activity {
         listMonthlyExpenses();
     }
 
-    private void listMonthlyExpenses() {
-        listMonthlyUsecase.list(chosenYear, chosenMonth);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_expense_management, menu);
         MenuItem item = menu.findItem(R.id.date_picker);
-        TextView datePicker = (TextView) item.getActionView().findViewById(R.id.date_picker_button);
-
-        final DatePickerFragment datePickerFragment = new DatePickerFragment();
-        datePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                datePickerFragment.show(getFragmentManager(), "datePicker");
-            }
-        });
-
-        Date today = new Date();
-        String formattedDate = DatePickerFragment.getFormattedDate(yearOf(today), monthOf(today));
-        datePicker.setText(formattedDate);
-
+        currentDate = (TextView) item.getActionView().findViewById(R.id.date_picker_button);
+        updateDateOnActionBar();
         return true;
     }
 
@@ -83,6 +68,48 @@ public class ExpenseManagementActivity extends Activity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onSwipeRightToLeft() {
+        nextMonth();
+        updateDateOnActionBar();
+        listMonthlyExpenses();
+    }
+
+
+    @Override
+    public void onSwipeLeftToRight() {
+        previousMonth();
+        updateDateOnActionBar();
+        listMonthlyExpenses();
+    }
+
+    private void updateDateOnActionBar() {
+        currentDate.setText(formattedDate(chosenYear, chosenMonth));
+    }
+
+    private void nextMonth() {
+        if(chosenMonth > 12){
+            chosenYear++;
+            chosenMonth = 1;
+        }else{
+            chosenMonth++;
+        }
+    }
+
+    private void previousMonth() {
+        if(chosenMonth < 1){
+            chosenYear--;
+            chosenMonth = 12;
+        }else{
+            chosenMonth--;
+        }
+    }
+
+    private void listMonthlyExpenses() {
+        listMonthlyUsecase.list(chosenYear, chosenMonth);
+
     }
 
     private List<String> messagesFromPhone() {
@@ -101,37 +128,13 @@ public class ExpenseManagementActivity extends Activity {
         return messages;
     }
 
-    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+    private static String formattedDate(int year, int month) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
 
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            ExpenseManagementActivity activity = getExpenseManagementActivity();
-            return new DatePickerDialog(activity, this, activity.chosenYear, activity.chosenMonth - 1, 1);
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            ExpenseManagementActivity activity = getExpenseManagementActivity();
-            activity.chosenYear = year;
-            activity.chosenMonth = month + 1;
-
-            activity.listMonthlyExpenses();
-
-            TextView monthView = (TextView) getActivity().findViewById(R.id.date_picker_button);
-            monthView.setText(getFormattedDate(activity.chosenYear, activity.chosenMonth));
-        }
-
-        private ExpenseManagementActivity getExpenseManagementActivity() {
-            return (ExpenseManagementActivity) getActivity();
-        }
-
-        public static String getFormattedDate(int year, int month) {
-            final Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month - 1);
-
-            String monthDisplay = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
-            return monthDisplay + "/" + year;
-        }
+        String monthDisplay = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
+        return monthDisplay + "/" + year;
     }
 
 }

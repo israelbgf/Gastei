@@ -1,4 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<israelbgf.gastei.mobile.widgets.SwipeableRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/main_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
 
@@ -47,4 +48,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</israelbgf.gastei.mobile.widgets.SwipeableRelativeLayout>
