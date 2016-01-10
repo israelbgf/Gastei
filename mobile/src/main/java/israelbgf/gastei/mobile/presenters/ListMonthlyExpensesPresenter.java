@@ -3,6 +3,8 @@ package israelbgf.gastei.mobile.presenters;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +17,16 @@ import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
 import israelbgf.gastei.mobile.presenters.sectionedview.SectionedRecyclerViewAdapter;
 import israelbgf.gastei.mobile.presenters.sectionedview.SectionedRecyclerViewAdapter.Section;
 
-import java.text.DecimalFormat;
+import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ListMonthlyExpensesPresenter implements Presenter {
 
-    private static DecimalFormat CURRENCY_FORMATTER = new DecimalFormat("$#.##");
+    private static NumberFormat CURRENCY_FORMATTER = NumberFormat.getCurrencyInstance(Locale.US);
+    private static DateFormat TIME_FORMATTER = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
     private ExpenseManagementActivity activity;
 
     public ListMonthlyExpensesPresenter(ExpenseManagementActivity activity) {
@@ -108,12 +113,19 @@ public class ListMonthlyExpensesPresenter implements Presenter {
         public void onBindViewHolder(ExpenseHolder holder, final int position) {
             holder.place.setText(expenses.get(position).getPlace());
             holder.amount.setText(CURRENCY_FORMATTER.format(expenses.get(position).getAmount()));
+            holder.details.setText(buildDetails(position));
             holder.amount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(context, "Position =" + position, Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+
+        public Spanned buildDetails(int position){
+            String time = "at " + TIME_FORMATTER.format(expenses.get(position).getDate());
+            String shared = expenses.get(position).isShared() ? " <b>(shared)</b>" : " <b>(shared)</b>";
+            return Html.fromHtml(time + shared);
         }
 
         @Override
@@ -124,11 +136,13 @@ public class ListMonthlyExpensesPresenter implements Presenter {
         public static class ExpenseHolder extends RecyclerView.ViewHolder {
             public final TextView amount;
             public final TextView place;
+            public final TextView details;
 
             public ExpenseHolder(View view) {
                 super(view);
                 amount = (TextView) view.findViewById(R.id.amount);
                 place = (TextView) view.findViewById(R.id.place);
+                details = (TextView) view.findViewById(R.id.details);
             }
         }
     }
