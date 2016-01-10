@@ -6,7 +6,6 @@ import android.widget.Toast;
 import israelbgf.gastei.core.usecases.ImportNewExpenses;
 
 import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.LENGTH_SHORT;
 import static israelbgf.gastei.core.usecases.RegisterExpenseFromSMS.BRADESCO_SMS_NUMBER;
 import static java.lang.String.format;
 
