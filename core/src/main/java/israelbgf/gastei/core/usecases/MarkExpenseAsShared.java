@@ -16,9 +16,7 @@ public class MarkExpenseAsShared {
         presenter.presentExpenseShared();
     }
 
-    public class Presenter {
-        public void presentExpenseShared() {
-
-        }
+    public interface Presenter {
+        void presentExpenseShared();
     }
 }

@@ -8,9 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 import israelbgf.gastei.core.entities.Expense;
-import israelbgf.gastei.core.usecases.MarkExpenseAsShared;
 import israelbgf.gastei.core.usecases.RegisterExpenseFromSMS;
 import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
+import israelbgf.gastei.mobile.receivers.MarkAsSharedReceiver;
 
 public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMS.Presenter {
     private Context context;
@@ -26,6 +26,8 @@ public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMS.P
 
     @Override
     public void presentNewExpenseAdded(Expense expenseAdded) {
+
+
         Notification.Builder notificationBuilder =
                 new Notification.Builder(context)
                         .setSmallIcon(android.R.drawable.ic_dialog_info)
@@ -49,14 +51,10 @@ public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMS.P
     }
 
     private PendingIntent createShareIntent(Expense expense) {
-        Intent intent = new Intent(context, ExpenseManagementActivity.class);
-        intent.setAction(MarkExpenseAsShared.class.getName());
+        Intent intent = new Intent(context, MarkAsSharedReceiver.class);
         intent.putExtra("EXPENSE_ID", expense.getId());
-
-        return PendingIntent.getActivity(context, generateRequestCode(), intent,
-                Intent.FLAG_ACTIVITY_NEW_TASK |
-                Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return pendingIntentCancel;
     }
 
     private int generateRequestCode() {
