@@ -123,7 +123,7 @@ public class ListMonthlyExpensesPresenter implements Presenter {
 
         public Spanned buildDetails(int position){
             String time = "at " + TIME_FORMATTER.format(expenses.get(position).getDate());
-            String shared = expenses.get(position).isShared() ? " <b>(shared)</b>" : " <b>(shared)</b>";
+            String shared = expenses.get(position).isShared() ? " <b>(shared)</b>" : "";
             return Html.fromHtml(time + shared);
         }
 
