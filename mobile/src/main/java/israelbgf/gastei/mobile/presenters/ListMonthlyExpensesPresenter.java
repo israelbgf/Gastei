@@ -9,11 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.usecases.ListMonthlyExpenses.Presenter;
+import israelbgf.gastei.core.usecases.MarkExpenseAsShared;
 import israelbgf.gastei.mobile.R;
 import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
+import israelbgf.gastei.mobile.factories.MarkExpenseAsSharedFactory;
 import israelbgf.gastei.mobile.presenters.sectionedview.SectionedRecyclerViewAdapter;
 import israelbgf.gastei.mobile.presenters.sectionedview.SectionedRecyclerViewAdapter.Section;
 
@@ -110,13 +111,16 @@ public class ListMonthlyExpensesPresenter implements Presenter {
 
         @Override
         public void onBindViewHolder(ExpenseHolder holder, final int position) {
+            final Expense selectedExpense = expenses.get(position);
+
             holder.place.setText(expenses.get(position).getPlace());
-            holder.amount.setText(CURRENCY_FORMATTER.format(expenses.get(position).getAmount()));
+            holder.amount.setText(CURRENCY_FORMATTER.format(selectedExpense.getAmount()));
             holder.details.setText(buildDetails(position));
-            holder.amount.setOnClickListener(new View.OnClickListener() {
+            holder.item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "Position =" + position, Toast.LENGTH_SHORT).show();
+                    MarkExpenseAsShared expenseMarker = MarkExpenseAsSharedFactory.make(context);
+                    expenseMarker.mark(selectedExpense.getId());
                 }
             });
         }
@@ -133,12 +137,14 @@ public class ListMonthlyExpensesPresenter implements Presenter {
         }
 
         public static class ExpenseHolder extends RecyclerView.ViewHolder {
+            public final ViewGroup item;
             public final TextView amount;
             public final TextView place;
             public final TextView details;
 
             public ExpenseHolder(View view) {
                 super(view);
+                item = (ViewGroup) view;
                 amount = (TextView) view.findViewById(R.id.amount);
                 place = (TextView) view.findViewById(R.id.place);
                 details = (TextView) view.findViewById(R.id.details);
