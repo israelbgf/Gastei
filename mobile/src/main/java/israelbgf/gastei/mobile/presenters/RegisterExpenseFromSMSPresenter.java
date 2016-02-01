@@ -26,7 +26,7 @@ public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMS.P
 
     @Override
     public void presentNewExpenseAdded(Expense expenseAdded) {
-
+        int requestCode = generateRequestCode();
 
         Notification.Builder notificationBuilder =
                 new Notification.Builder(context)
@@ -34,13 +34,13 @@ public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMS.P
                         .setContentTitle("There is a new expense!")
                         .setPriority(Notification.PRIORITY_MAX)
                         .setWhen(0)
-                        .addAction(android.R.drawable.ic_menu_send, "Share this one", createShareIntent(expenseAdded))
+                        .addAction(android.R.drawable.ic_menu_send, "Share this one", createShareIntent(expenseAdded, requestCode))
                         .setContentText("A new expense with the value of " + expenseAdded.getAmount());
 
         notificationBuilder.setContentIntent(createShowDetailsIntent());
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(generateRequestCode(), notificationBuilder.build());
+        notificationManager.notify(requestCode, notificationBuilder.build());
     }
 
     private PendingIntent createShowDetailsIntent() {
@@ -50,9 +50,10 @@ public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMS.P
         return stackBuilder.getPendingIntent(generateRequestCode(), PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    private PendingIntent createShareIntent(Expense expense) {
+    private PendingIntent createShareIntent(Expense expense, int requestCode) {
         Intent intent = new Intent(context, MarkAsSharedReceiver.class);
         intent.putExtra("EXPENSE_ID", expense.getId());
+        intent.putExtra("NOTIFICATION_ID", requestCode);
         PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntentCancel;
     }
