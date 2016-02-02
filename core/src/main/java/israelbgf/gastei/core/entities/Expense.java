@@ -34,6 +34,10 @@ public class Expense {
         return shared;
     }
 
+    public void setShared(boolean shared) {
+        this.shared = shared;
+    }
+
     public Expense(Long id, double amount, String place, Date date, boolean shared) {
         this.id = id;
         this.amount = amount;

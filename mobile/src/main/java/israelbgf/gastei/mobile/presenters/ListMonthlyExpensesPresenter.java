@@ -51,8 +51,12 @@ public class ListMonthlyExpensesPresenter implements Presenter {
         TextView totalAmount = (TextView) activity.findViewById(R.id.total_amount);
         totalAmount.setText(CURRENCY_FORMATTER.format(struct.totalAmount));
 
+        updateTotalShared(CURRENCY_FORMATTER.format(struct.sharedAmount));
+    }
+
+    private void updateTotalShared(String format) {
         TextView totalShared = (TextView) activity.findViewById(R.id.total_shared);
-        totalShared.setText(CURRENCY_FORMATTER.format(struct.sharedAmount));
+        totalShared.setText(format);
     }
 
     private SectionedRecyclerViewAdapter createSectionedExpenseAdapter(Struct struct) {
@@ -91,7 +95,7 @@ public class ListMonthlyExpensesPresenter implements Presenter {
         return new SimpleDateFormat("EEEE dd", Locale.US).format(date);
     }
 
-    public static class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseHolder> {
+    public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseHolder> {
 
         private final Context context;
         private List<Expense> expenses = new ArrayList<>();
@@ -110,7 +114,7 @@ public class ListMonthlyExpensesPresenter implements Presenter {
         }
 
         @Override
-        public void onBindViewHolder(ExpenseHolder holder, final int position) {
+        public void onBindViewHolder(final ExpenseHolder holder, final int position) {
             final Expense selectedExpense = expenses.get(position);
 
             holder.place.setText(expenses.get(position).getPlace());
@@ -119,7 +123,23 @@ public class ListMonthlyExpensesPresenter implements Presenter {
             holder.item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MarkExpenseAsShared expenseMarker = MarkExpenseAsSharedFactory.make(context);
+                    MarkExpenseAsShared expenseMarker = MarkExpenseAsSharedFactory.make(context, new MarkExpenseAsShared.Presenter() {
+                        @Override
+                        public void presentExpenseShared() {
+                            expenses.get(position).setShared(true);
+                            holder.details.setText(buildDetails(position));
+
+                            double totalSharedAmount = 0;
+                            for(Expense expense : expenses) {
+                                if(expense.isShared()) {
+                                    totalSharedAmount += expense.getAmount();
+                                }
+                            }
+
+                            updateTotalShared(CURRENCY_FORMATTER.format(totalSharedAmount));
+                        }
+                    });
+
                     expenseMarker.mark(selectedExpense.getId());
                 }
             });
@@ -136,7 +156,7 @@ public class ListMonthlyExpensesPresenter implements Presenter {
             return expenses.size();
         }
 
-        public static class ExpenseHolder extends RecyclerView.ViewHolder {
+        public class ExpenseHolder extends RecyclerView.ViewHolder {
             public final ViewGroup item;
             public final TextView amount;
             public final TextView place;
