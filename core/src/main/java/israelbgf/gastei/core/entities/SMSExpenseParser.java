@@ -72,6 +72,10 @@ public class SMSExpenseParser {
         public String toString() {
             return smsContent + "\n>>> " + super.toString();
         }
+
+        public String getSmsContent() {
+            return smsContent;
+        }
     }
 
 }

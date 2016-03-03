@@ -28,7 +28,7 @@ public class ImportNewExpenses {
                         importedQuantity++;
                     }
                 } catch (SMSExpenseParser.InvalidSMSException e) {
-                    presenter.parsingProblem(e.getMessage());
+                    presenter.parsingProblem(e.getSmsContent());
                 }
             }
         }
