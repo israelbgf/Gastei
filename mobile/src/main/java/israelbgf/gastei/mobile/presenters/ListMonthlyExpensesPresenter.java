@@ -126,13 +126,14 @@ public class ListMonthlyExpensesPresenter implements Presenter {
                     ToggleExpenseSharedStatus expenseMarker = ToggleExpenseSharedStatusFactory.make(context, new ToggleExpenseSharedStatus.Presenter() {
                         @Override
                         public void presentUpdatedExpense() {
-                            expenses.get(position).setShared(true);
+                            Expense expense = expenses.get(position);
+                            expense.setShared(!expense.isShared());
                             holder.details.setText(buildDetails(position));
 
                             double totalSharedAmount = 0;
-                            for(Expense expense : expenses) {
-                                if(expense.isShared()) {
-                                    totalSharedAmount += expense.getAmount();
+                            for(Expense item : expenses) {
+                                if(item.isShared()) {
+                                    totalSharedAmount += item.getAmount();
                                 }
                             }
 
