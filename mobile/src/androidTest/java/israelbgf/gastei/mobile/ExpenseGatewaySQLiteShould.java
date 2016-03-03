@@ -80,16 +80,30 @@ public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application>
     }
 
 
-    public void testMarkAsShared() {
+    public void testMakeItSharedWhenItsNot() {
         Date january = date(2015, 1);
-        Expense giassiExpense = new Expense(10, "Giassi", january, false);
-        gateway.save(giassiExpense);
+        Expense expenseToBeAffected = new Expense(10, "Giassi", january, false);
+        Expense otherExpense = new Expense(10, "Angeloni", january, false);
+        gateway.save(expenseToBeAffected);
+        gateway.save(otherExpense);
 
-        gateway.toggleSharedStatus(giassiExpense.getId());
+        gateway.toggleSharedStatus(expenseToBeAffected.getId());
 
-        BetterCursor cursor = database.query(EXPENSE_TABLE, ExpenseTableDefinition.ALL_COLUMNS);
-        cursor.moveToFirst();
-        assertTrue(cursor.getBoolean(SHARED));
+        BetterCursor cursor = database.query(EXPENSE_TABLE, ExpenseTableDefinition.ALL_COLUMNS, "shared = 1 and _id = ?", expenseToBeAffected.getId());
+        assertEquals(1, cursor.getCount());
+    }
+
+    public void testMakeItUnsharedWhenItIs() {
+        Date january = date(2015, 1);
+        Expense expenseToBeAffected = new Expense(10, "Giassi", january, true);
+        Expense otherExpense = new Expense(10, "Angeloni", january, true);
+        gateway.save(expenseToBeAffected);
+        gateway.save(otherExpense);
+
+        gateway.toggleSharedStatus(expenseToBeAffected.getId());
+
+        BetterCursor cursor = database.query(EXPENSE_TABLE, ExpenseTableDefinition.ALL_COLUMNS, "shared = 0 and _id = ?", expenseToBeAffected.getId());
+        assertEquals(1, cursor.getCount());
     }
 
     public void testContainsWhenHaveSamePlaceDateAndAmount(){

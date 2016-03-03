@@ -30,6 +30,10 @@ public class BetterSQLiteDatabase {
         return new BetterCursor(database.query(tableName, projection, restriction, restrictionParameters(parameters), groupBy, having, orderBy));
     }
 
+    public void execDML(String dml, Object[] parameters){
+        database.execSQL(dml, parameters);
+    }
+
     private String[] restrictionParameters(Object[] parameters) {
         String[] processedParameters = new String[parameters.length];
         for(int i = 0; i < parameters.length; i++)
