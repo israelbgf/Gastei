@@ -2,7 +2,8 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:padding="6dip"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              style="?android:borderlessButtonStyle">
 
     <LinearLayout
             android:layout_height="wrap_content"
