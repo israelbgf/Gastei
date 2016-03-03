@@ -51,12 +51,12 @@ public class ListMonthlyExpensesPresenter implements Presenter {
         TextView totalAmount = (TextView) activity.findViewById(R.id.total_amount);
         totalAmount.setText(CURRENCY_FORMATTER.format(struct.totalAmount));
 
-        updateTotalShared(CURRENCY_FORMATTER.format(struct.sharedAmount));
+        updateTotalShared(struct.sharedAmount);
     }
 
-    private void updateTotalShared(String format) {
+    private void updateTotalShared(double amount) {
         TextView totalShared = (TextView) activity.findViewById(R.id.total_shared);
-        totalShared.setText(format);
+        totalShared.setText(CURRENCY_FORMATTER.format(amount / 2.0));
     }
 
     private SectionedRecyclerViewAdapter createSectionedExpenseAdapter(Struct struct) {
@@ -137,7 +137,7 @@ public class ListMonthlyExpensesPresenter implements Presenter {
                                 }
                             }
 
-                            updateTotalShared(CURRENCY_FORMATTER.format(totalSharedAmount));
+                            updateTotalShared(totalSharedAmount);
                         }
                     });
 
