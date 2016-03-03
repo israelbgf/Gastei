@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.usecases.ListMonthlyExpenses.Presenter;
-import israelbgf.gastei.core.usecases.MarkExpenseAsShared;
+import israelbgf.gastei.core.usecases.ToggleExpenseSharedStatus;
 import israelbgf.gastei.mobile.R;
 import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
-import israelbgf.gastei.mobile.factories.MarkExpenseAsSharedFactory;
+import israelbgf.gastei.mobile.factories.ToggleExpenseSharedStatusFactory;
 import israelbgf.gastei.mobile.presenters.sectionedview.SectionedRecyclerViewAdapter;
 import israelbgf.gastei.mobile.presenters.sectionedview.SectionedRecyclerViewAdapter.Section;
 
@@ -123,9 +123,9 @@ public class ListMonthlyExpensesPresenter implements Presenter {
             holder.item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MarkExpenseAsShared expenseMarker = MarkExpenseAsSharedFactory.make(context, new MarkExpenseAsShared.Presenter() {
+                    ToggleExpenseSharedStatus expenseMarker = ToggleExpenseSharedStatusFactory.make(context, new ToggleExpenseSharedStatus.Presenter() {
                         @Override
-                        public void presentExpenseShared() {
+                        public void presentUpdatedExpense() {
                             expenses.get(position).setShared(true);
                             holder.details.setText(buildDetails(position));
 
@@ -140,7 +140,7 @@ public class ListMonthlyExpensesPresenter implements Presenter {
                         }
                     });
 
-                    expenseMarker.mark(selectedExpense.getId());
+                    expenseMarker.toggle(selectedExpense.getId());
                 }
             });
         }

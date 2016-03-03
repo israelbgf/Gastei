@@ -57,7 +57,7 @@ public class ExpenseGatewaySQLite implements ExpenseGateway {
     }
 
     @Override
-    public void markExpenseAsShared(long existingExpenseId) {
+    public void toggleSharedStatus(long existingExpenseId) {
         database.update(EXPENSE_TABLE, new BetterContentValues().with(SHARED, true), "_id = ?", existingExpenseId);
     }
 

@@ -85,7 +85,7 @@ public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application>
         Expense giassiExpense = new Expense(10, "Giassi", january, false);
         gateway.save(giassiExpense);
 
-        gateway.markExpenseAsShared(giassiExpense.getId());
+        gateway.toggleSharedStatus(giassiExpense.getId());
 
         BetterCursor cursor = database.query(EXPENSE_TABLE, ExpenseTableDefinition.ALL_COLUMNS);
         cursor.moveToFirst();
