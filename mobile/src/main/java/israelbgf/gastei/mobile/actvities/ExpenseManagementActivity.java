@@ -1,6 +1,7 @@
 package israelbgf.gastei.mobile.actvities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -59,6 +60,9 @@ public class ExpenseManagementActivity extends Activity implements SwipeableRela
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_add:
+                startActivity(new Intent(this, ExpenseActivity.class));
+                return true;
             case R.id.action_refresh:
                 listMonthlyExpenses();
                 return true;

@@ -20,6 +20,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".actvities.ExpenseActivity">
+        </activity>
+
         <receiver android:name=".receivers.MarkAsSharedReceiver"/>
 
         <receiver android:name=".receivers.SmsReceiver">
