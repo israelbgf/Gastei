@@ -5,9 +5,9 @@ import java.util.Objects;
 
 public class Expense {
     private Long id;
-    private final double amount;
-    private final String place;
-    private final Date date;
+    private double amount;
+    private String place;
+    private Date date;
     private boolean shared;
 
     public Long getId() {
@@ -36,6 +36,9 @@ public class Expense {
 
     public void setShared(boolean shared) {
         this.shared = shared;
+    }
+
+    public Expense() {
     }
 
     public Expense(Long id, double amount, String place, Date date, boolean shared) {
@@ -80,4 +83,15 @@ public class Expense {
         return Objects.hash(id, amount, place, date);
     }
 
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 }
