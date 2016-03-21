@@ -26,11 +26,21 @@ public class ExpenseGatewaySQLite implements ExpenseGateway {
 
     @Override
     public void save(Expense expense) {
-        long id = database.insert(EXPENSE_TABLE, new BetterContentValues()
-                .with(AMOUNT, expense.getAmount())
-                .with(PLACE, expense.getPlace())
-                .with(DATE, expense.getDate())
-                .with(SHARED, expense.isShared()));
+        long id;
+
+        if (expense.getId() == null) {
+            id = database.insert(EXPENSE_TABLE, new BetterContentValues()
+                    .with(AMOUNT, expense.getAmount())
+                    .with(PLACE, expense.getPlace())
+                    .with(DATE, expense.getDate())
+                    .with(SHARED, expense.isShared()));
+        } else {
+            id = database.update(EXPENSE_TABLE, new BetterContentValues()
+                    .with(AMOUNT, expense.getAmount())
+                    .with(PLACE, expense.getPlace())
+                    .with(DATE, expense.getDate())
+                    .with(SHARED, expense.isShared()), "_ID = ?", expense.getId());
+        }
 
         expense.setId(id);
     }

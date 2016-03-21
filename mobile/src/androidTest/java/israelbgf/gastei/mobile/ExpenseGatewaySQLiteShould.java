@@ -48,6 +48,26 @@ public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application>
 
     }
 
+    public void testUpdateInDatabase() {
+        Expense expense = new Expense(20.57, "Giassi", date(2015, 12), true);
+        gateway.save(expense);
+        expense.setAmount(10.0);
+        expense.setPlace("Angeloni");
+        expense.setDate(date(2015, 11));
+        expense.setShared(false);
+        gateway.save(expense);
+
+        BetterCursor cursor = database.query(EXPENSE_TABLE, ExpenseTableDefinition.ALL_COLUMNS);
+        cursor.moveToLast();
+
+        assertEquals(1, cursor.getCount());
+        assertEquals(expense.getId().longValue(), cursor.getLong(ExpenseTableDefinition._ID));
+        assertEquals(expense.getAmount(), cursor.getDouble(AMOUNT));
+        assertEquals(expense.getDate(), cursor.getDate(DATE));
+        assertEquals(expense.getPlace(), cursor.getString(PLACE));
+        assertEquals(expense.isShared(), cursor.getBoolean(ExpenseTableDefinition.SHARED));
+    }
+
     public void testRetrievalByMonth() {
         Expense giassiExpense = new Expense(10, "Giassi", date(2015, 1), true);
         Expense otherExpense = new Expense(20, "This guy shouldnt bre retrivied", date(2015, 2), true);
