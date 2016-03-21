@@ -18,33 +18,48 @@ import java.util.Date;
 
 public class ExpenseActivity extends Activity {
 
+    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    Expense expense;
+
     EditText amount;
     EditText place;
     EditText date;
     Switch shared;
     Button save;
-    private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.expense);
-        setupFields();
+        findViews();
+        setupViews();
     }
 
-    void setupFields() {
+    void findViews() {
         amount = (EditText) findViewById(R.id.amount);
         place = (EditText) findViewById(R.id.place);
         date = (EditText) findViewById(R.id.date);
         shared = (Switch) findViewById(R.id.shared);
         save = (Button) findViewById(R.id.save);
+    }
 
-        date.setText(dateFormatter.format(new Date()));
+    private void setupViews() {
+        expense = (Expense) getIntent().getSerializableExtra("expense");
+        if (expense == null) {
+            expense = new Expense();
+            date.setText(dateFormatter.format(new Date()));
+        } else {
+            amount.setText(String.valueOf(expense.getAmount()));
+            place.setText(expense.getPlace());
+            date.setText(dateFormatter.format(expense.getDate()));
+            shared.setChecked(expense.isShared());
+        }
+
     }
 
     public void save(View v) {
         try {
-            Expense expense = parseExpense();
+            fillExpenseFromForm();
             ExpenseGatewaySQLite gateway = ExpenseGatewaySQLiteFactory.make(this);
             gateway.save(expense);
             Toast.makeText(this, "Created! :)", Toast.LENGTH_SHORT).show();
@@ -53,9 +68,8 @@ public class ExpenseActivity extends Activity {
         }
     }
 
-    private Expense parseExpense() {
+    private void fillExpenseFromForm() {
         boolean hasErrors = false;
-        Expense expense = new Expense();
         try {
             expense.setAmount(Double.valueOf(amount.getText().toString()));
         } catch (Exception e) {
@@ -81,7 +95,6 @@ public class ExpenseActivity extends Activity {
         if (hasErrors)
             throw new RuntimeException();
 
-        return expense;
     }
 
 }

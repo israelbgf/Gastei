@@ -1,18 +1,18 @@
 package israelbgf.gastei.mobile.presenters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.TextView;
 import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.usecases.ListMonthlyExpenses.Presenter;
 import israelbgf.gastei.core.usecases.ToggleExpenseSharedStatus;
 import israelbgf.gastei.mobile.R;
+import israelbgf.gastei.mobile.actvities.ExpenseActivity;
 import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
 import israelbgf.gastei.mobile.factories.ToggleExpenseSharedStatusFactory;
 import israelbgf.gastei.mobile.presenters.sectionedview.SectionedRecyclerViewAdapter;
@@ -71,14 +71,14 @@ public class ListMonthlyExpensesPresenter implements Presenter {
 
     private List<Section> asAGroupOf(LinkedHashMap<Integer, List<Expense>> dailyExpenses) {
         List<Section> sections = new ArrayList<>();
-        if(!dailyExpenses.isEmpty()){
+        if (!dailyExpenses.isEmpty()) {
             LinkedList<List<Expense>> dailyExpensesGroups = new LinkedList<>(dailyExpenses.values());
             Expense firstExpenseOfTheMonth = dailyExpensesGroups.getFirst().get(0);
             sections.add(new Section(0, dayOfWeek(firstExpenseOfTheMonth.getDate())));
 
             boolean firstDay = true;
             int sectionPosition = 0;
-            for(Map.Entry<Integer, List<Expense>> entry : dailyExpenses.entrySet()){
+            for (Map.Entry<Integer, List<Expense>> entry : dailyExpenses.entrySet()) {
                 if (firstDay) {
                     sectionPosition += entry.getValue().size();
                     firstDay = false;
@@ -102,7 +102,7 @@ public class ListMonthlyExpensesPresenter implements Presenter {
 
         public ExpenseAdapter(Context context, Collection<List<Expense>> expensesGroup) {
             this.context = context;
-            for(List<Expense> expenses : expensesGroup){
+            for (List<Expense> expenses : expensesGroup) {
                 this.expenses.addAll(expenses);
             }
         }
@@ -117,12 +117,22 @@ public class ListMonthlyExpensesPresenter implements Presenter {
         public void onBindViewHolder(final ExpenseHolder holder, final int position) {
             final Expense selectedExpense = expenses.get(position);
 
-            holder.place.setText(expenses.get(position).getPlace());
+            holder.place.setText(selectedExpense.getPlace());
             holder.amount.setText(CURRENCY_FORMATTER.format(selectedExpense.getAmount()));
             holder.details.setText(buildDetails(position));
+
             holder.item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Intent intent = new Intent(context, ExpenseActivity.class);
+                    intent.putExtra("expense", selectedExpense);
+                    context.startActivity(intent);
+                }
+            });
+
+            holder.item.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
                     ToggleExpenseSharedStatus expenseMarker = ToggleExpenseSharedStatusFactory.make(context, new ToggleExpenseSharedStatus.Presenter() {
                         @Override
                         public void presentUpdatedExpense() {
@@ -131,8 +141,8 @@ public class ListMonthlyExpensesPresenter implements Presenter {
                             holder.details.setText(buildDetails(position));
 
                             double totalSharedAmount = 0;
-                            for(Expense item : expenses) {
-                                if(item.isShared()) {
+                            for (Expense item : expenses) {
+                                if (item.isShared()) {
                                     totalSharedAmount += item.getAmount();
                                 }
                             }
@@ -142,11 +152,12 @@ public class ListMonthlyExpensesPresenter implements Presenter {
                     });
 
                     expenseMarker.toggle(selectedExpense.getId());
+                    return true;
                 }
             });
         }
 
-        public Spanned buildDetails(int position){
+        public Spanned buildDetails(int position) {
             String time = "at " + TIME_FORMATTER.format(expenses.get(position).getDate());
             String shared = expenses.get(position).isShared() ? " <b>(shared)</b>" : "";
             return Html.fromHtml(time + shared);
