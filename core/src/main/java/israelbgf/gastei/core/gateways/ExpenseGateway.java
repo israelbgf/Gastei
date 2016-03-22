@@ -13,4 +13,5 @@ public interface ExpenseGateway {
 
     boolean contains(Expense candidate);
 
+    void delete(Long id);
 }

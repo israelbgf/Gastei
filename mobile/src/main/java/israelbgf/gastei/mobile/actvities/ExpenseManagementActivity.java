@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.transition.Explode;
+import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.TextView;
 import israelbgf.gastei.core.usecases.ImportNewExpenses;
 import israelbgf.gastei.core.usecases.ListMonthlyExpenses;
@@ -34,12 +37,19 @@ public class ExpenseManagementActivity extends Activity implements SwipeableRela
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setupVisualEffectsForActivityTransitions();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.expense_list);
         ((SwipeableRelativeLayout)findViewById(R.id.main_layout)).setOnSwipeListener(this);
 
         listMonthlyUsecase  = ListMonthlyExpensesFactory.make(this);
         importNewExpensesUsecase = ImportNewExpensesFactory.make(this);
+    }
+
+    private void setupVisualEffectsForActivityTransitions() {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        getWindow().setEnterTransition(new Fade());
+        getWindow().setExitTransition(new Fade());
     }
 
     @Override

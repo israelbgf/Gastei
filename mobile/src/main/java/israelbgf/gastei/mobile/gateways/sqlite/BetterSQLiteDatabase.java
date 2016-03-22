@@ -15,7 +15,10 @@ public class BetterSQLiteDatabase {
 
     public long update(String tableName, BetterContentValues values, String restriction, Object... parameters){
         return database.update(tableName, values.getContentValues(), restriction, restrictionParameters(parameters));
+    }
 
+    public int delete(String tableName, String restriction, Object... parameters) {
+        return database.delete(tableName, restriction, restrictionParameters(parameters));
     }
 
     public BetterCursor query(String tableName, String[] projection) {

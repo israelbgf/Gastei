@@ -1,11 +1,15 @@
 package israelbgf.gastei.mobile.presenters;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.transition.Explode;
+import android.transition.Fade;
 import android.view.*;
 import android.widget.TextView;
 import israelbgf.gastei.core.entities.Expense;
@@ -124,9 +128,10 @@ public class ListMonthlyExpensesPresenter implements Presenter {
             holder.item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, ExpenseActivity.class);
+                    Activity activity = (Activity) context;
+                    Intent intent = new Intent(activity, ExpenseActivity.class);
                     intent.putExtra("expense", selectedExpense);
-                    context.startActivity(intent);
+                    activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
                 }
             });
 

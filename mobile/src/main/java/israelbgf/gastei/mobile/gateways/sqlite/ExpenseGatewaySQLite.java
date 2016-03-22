@@ -79,8 +79,14 @@ public class ExpenseGatewaySQLite implements ExpenseGateway {
         return cursor.moveToNext();
     }
 
+    @Override
+    public void delete(Long id) {
+        database.delete(EXPENSE_TABLE, "_ID = ?", id);
+    }
+
     private String[] projection(String... projection) {
         return projection;
     }
+
 
 }

@@ -68,6 +68,21 @@ public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application>
         assertEquals(expense.isShared(), cursor.getBoolean(ExpenseTableDefinition.SHARED));
     }
 
+    public void testDeleteExpense() {
+        Expense expense = new Expense(20.57, "Giassi", date(2015, 12), true);
+        gateway.save(expense);
+        Expense otherExpense = new Expense(20.57, "Giassi", date(2015, 12), true);
+        gateway.save(otherExpense);
+
+        gateway.delete(expense.getId());
+        BetterCursor cursor = database.query(EXPENSE_TABLE, ExpenseTableDefinition.ALL_COLUMNS);
+        cursor.moveToFirst();
+
+        assertEquals(1, cursor.getCount());
+        assertEquals(otherExpense.getId().longValue(), cursor.getLong(ExpenseTableDefinition._ID));
+
+    }
+
     public void testRetrievalByMonth() {
         Expense giassiExpense = new Expense(10, "Giassi", date(2015, 1), true);
         Expense otherExpense = new Expense(20, "This guy shouldnt bre retrivied", date(2015, 2), true);
