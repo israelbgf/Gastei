@@ -1,6 +1,7 @@
 package israelbgf.gastei.core.gateways;
 
 import israelbgf.gastei.core.entities.Expense;
+import israelbgf.gastei.core.values.Month;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface ExpenseGateway {
     boolean contains(Expense candidate);
 
     void delete(Long id);
+
+    List<Expense> retrieveBy(Month month);
 }

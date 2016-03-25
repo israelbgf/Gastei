@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import static israelbgf.gastei.core.utils.DateUtils.date;
+import static israelbgf.gastei.core.values.Month.month;
 import static israelbgf.gastei.mobile.gateways.sqlite.ExpenseTableDefinition.*;
 
 public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application> {
@@ -91,6 +92,25 @@ public class ExpenseGatewaySQLiteShould extends ApplicationTestCase<Application>
         gateway.save(otherExpense);
 
         List<Expense> expenses = gateway.retrieveByMonth(2015, 1);
+
+        assertEquals(1, expenses.size());
+        Expense storedExpense = expenses.get(0);
+        assertNotNull(storedExpense.getId());
+        assertEquals(giassiExpense.getAmount(), storedExpense.getAmount());
+        assertEquals(giassiExpense.getPlace(), storedExpense.getPlace());
+        assertEquals(giassiExpense.getDate().getTime(), storedExpense.getDate().getTime(), 1000);
+        assertEquals(giassiExpense.isShared(), storedExpense.isShared());
+
+    }
+
+    public void testOverridedRetrievalByMonth() {
+        Expense giassiExpense = new Expense(10, "Giassi", date(2015, 1), true);
+        Expense otherExpense = new Expense(20, "This guy shouldnt bre retrivied", date(2015, 2), true);
+
+        gateway.save(giassiExpense);
+        gateway.save(otherExpense);
+
+        List<Expense> expenses = gateway.retrieveBy(month(2015, 1));
 
         assertEquals(1, expenses.size());
         Expense storedExpense = expenses.get(0);

@@ -3,6 +3,7 @@ package israelbgf.gastei.mobile.gateways.sqlite;
 import android.database.sqlite.SQLiteDatabase;
 import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
+import israelbgf.gastei.core.values.Month;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +83,11 @@ public class ExpenseGatewaySQLite implements ExpenseGateway {
     @Override
     public void delete(Long id) {
         database.delete(EXPENSE_TABLE, "_ID = ?", id);
+    }
+
+    @Override
+    public List<Expense> retrieveBy(Month month) {
+        return retrieveByMonth(month.year, month.month);
     }
 
     private String[] projection(String... projection) {

@@ -58,6 +58,10 @@ public class Expense implements Serializable{
         this(null, amount, place, date, shared);
     }
 
+    public Expense(double amount, String place) {
+        this(amount, place, new Date());
+    }
+
     @Override
     public String toString() {
         return "Expense{" +
