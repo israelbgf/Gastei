@@ -1,11 +1,13 @@
 package israelbgf.gastei.mobile.gateways.sqlite;
 
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.database.CharArrayBuffer;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import java.util.Date;
@@ -225,6 +227,12 @@ public class BetterCursor implements Cursor{
     @Override
     public boolean getWantsAllOnMoveCalls() {
         return cursor.getWantsAllOnMoveCalls();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    @Override
+    public void setExtras(Bundle bundle) {
+        cursor.setExtras(bundle);
     }
 
     @Override
