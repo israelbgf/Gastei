@@ -8,16 +8,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
-import android.transition.Explode;
-import android.transition.Fade;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.usecases.ListMonthlyExpenses.Presenter;
 import israelbgf.gastei.core.usecases.ToggleExpenseSharedStatus;
 import israelbgf.gastei.mobile.R;
 import israelbgf.gastei.mobile.actvities.ExpenseActivity;
-import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
 import israelbgf.gastei.mobile.factories.ToggleExpenseSharedStatusFactory;
 import israelbgf.gastei.mobile.presenters.sectionedview.SectionedRecyclerViewAdapter;
 import israelbgf.gastei.mobile.presenters.sectionedview.SectionedRecyclerViewAdapter.Section;
@@ -32,9 +31,9 @@ public class ListMonthlyExpensesPresenter implements Presenter {
     private static NumberFormat CURRENCY_FORMATTER = NumberFormat.getCurrencyInstance(Locale.US);
     private static DateFormat TIME_FORMATTER = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
-    private ExpenseManagementActivity activity;
+    private Activity activity;
 
-    public ListMonthlyExpensesPresenter(ExpenseManagementActivity activity) {
+    public ListMonthlyExpensesPresenter(Activity activity) {
         this.activity = activity;
     }
 

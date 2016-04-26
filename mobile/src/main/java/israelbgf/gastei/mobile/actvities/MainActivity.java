@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        setupVisualEffectsForActivityTransitions();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -31,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nvView);
         navigationView.setNavigationItemSelectedListener(new MenuListener());
     }
+
+//    private void setupVisualEffectsForActivityTransitions() {
+//        getActivity().getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+//        getActivity().getWindow().setEnterTransition(new Fade());
+//        getActivity().getWindow().setExitTransition(new Fade());
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
