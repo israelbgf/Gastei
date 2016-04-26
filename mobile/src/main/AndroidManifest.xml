@@ -12,7 +12,7 @@
         android:theme="@style/MyMaterialTheme" >
 
         <activity
-            android:name=".actvities.ExpenseManagementActivity2">
+            android:name=".actvities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
