@@ -1,51 +1,66 @@
-<israelbgf.gastei.mobile.widgets.SwipeableRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/main_layout"
+<!-- The main content view where fragments are loaded -->
+<android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <israelbgf.gastei.mobile.widgets.SwipeableRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                             android:id="@+id/main_layout"
+                                                             android:layout_width="fill_parent"
+                                                             android:layout_height="fill_parent">
+
+        <view
+                android:paddingBottom="30dp"
+                class="android.support.v7.widget.RecyclerView"
+                android:id="@+id/list"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                android:layout_centerInParent="true"/>
 
-    <view
-            android:paddingBottom="30dp"
-            class="android.support.v7.widget.RecyclerView"
-            android:id="@+id/list"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_centerInParent="true"/>
+        <LinearLayout
+                android:padding="10dp"
+                android:background="@android:color/holo_blue_dark"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
 
-    <LinearLayout
-            android:padding="10dp"
-            android:background="@android:color/holo_blue_dark"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            <TextView
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TOTAL "/>
 
-        <TextView
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TOTAL "/>
+            <TextView
+                    android:textStyle="bold"
+                    android:id="@+id/total_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-        <TextView
-                android:textStyle="bold"
-                android:id="@+id/total_amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <TextView
+                    android:paddingLeft="10dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SHARED "/>
 
-        <TextView
-                android:paddingLeft="10dp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="SHARED "/>
+            <TextView
+                    android:textStyle="bold"
+                    android:id="@+id/total_shared"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-        <TextView
-                android:textStyle="bold"
-                android:id="@+id/total_shared"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
-    </LinearLayout>
+    </israelbgf.gastei.mobile.widgets.SwipeableRelativeLayout>
 
-</israelbgf.gastei.mobile.widgets.SwipeableRelativeLayout>
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"/>
+
+</android.support.design.widget.CoordinatorLayout>

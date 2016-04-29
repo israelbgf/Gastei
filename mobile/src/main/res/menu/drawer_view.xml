@@ -1,22 +1,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item
-                android:id="@+id/nav_first_fragment"
-                android:title="First" />
-        <item
-                android:id="@+id/nav_second_fragment"
-                android:title="Second" />
-        <item
-                android:id="@+id/nav_third_fragment"
-                android:title="Third" />
+        <item android:title="Show Expenses">
+            <item
+                    android:id="@+id/nav_first_fragment"
+                    android:title="by Day"/>
+            <item
+                    android:id="@+id/nav_second_fragment"
+                    android:title="by Place"/>
+        </item>
 
-        <item android:title="Sub items">
+        <item android:title="Options">
             <menu>
                 <item
-                        android:title="Sub item 1" />
+                        android:title="Import SMSs"/>
                 <item
-                        android:title="Sub item 2" />
+                        android:title="About"/>
             </menu>
         </item>
 

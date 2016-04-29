@@ -111,31 +111,6 @@ public class ExpensesByDay extends Fragment implements SwipeableRelativeLayout.S
 
     }
 
-//    private List<String> messagesFromPhone() {
-//        String[] selection = new String[]{RegisterExpenseFromSMS.BRADESCO_SMS_NUMBER};
-//        Cursor cursor = getActivity().getContentResolver().query(
-//                Uri.parse("content://sms/inbox"), new String[]{"body"}, "address=?", selection, null);
-//
-//        List<String> messages = new ArrayList<>();
-//        if (cursor.moveToFirst()) {
-//            do {
-//                messages.add(cursor.getString(0));
-//            } while (cursor.moveToNext());
-//        }
-//        cursor.close();
-//
-//        return messages;
-//    }
-
-//    private static String formattedDate(int year, int month) {
-//        final Calendar calendar = Calendar.getInstance();
-//        calendar.set(Calendar.YEAR, year);
-//        calendar.set(Calendar.MONTH, month - 1);
-//
-//        String monthDisplay = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
-//        return monthDisplay + "/" + year;
-//    }
-
 
     public ExpensesByDay() {
         // Required empty public constructor
