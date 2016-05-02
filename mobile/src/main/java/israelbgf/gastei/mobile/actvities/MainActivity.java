@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        setupVisualEffectsForActivityTransitions();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -42,12 +41,6 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(menuListener);
         menuListener.onNavigationItemSelected(navigationView.getMenu().findItem(R.id.expenses_by_day));
     }
-
-//    private void setupVisualEffectsForActivityTransitions() {
-//        getActivity().getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-//        getActivity().getWindow().setEnterTransition(new Fade());
-//        getActivity().getWindow().setExitTransition(new Fade());
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
