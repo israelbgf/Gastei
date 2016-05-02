@@ -12,11 +12,9 @@ import android.view.MenuItem;
 import israelbgf.gastei.mobile.R;
 import israelbgf.gastei.mobile.fragments.ExpensesByDay;
 import israelbgf.gastei.mobile.fragments.ExpensesByPlace;
-import israelbgf.gastei.mobile.widgets.MonthPicker;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
-    private MonthPicker currentDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Set a Toolbar to replace the ActionBar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        currentDate = (MonthPicker) findViewById(R.id.month_picker);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -35,7 +32,9 @@ public class MainActivity extends AppCompatActivity {
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nvView);
-        navigationView.setNavigationItemSelectedListener(new MenuListener());
+        MenuListener menuListener = new MenuListener();
+        navigationView.setNavigationItemSelectedListener(menuListener);
+        menuListener.onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_first_fragment));
     }
 
 //    private void setupVisualEffectsForActivityTransitions() {
@@ -74,11 +73,7 @@ public class MainActivity extends AppCompatActivity {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
-            // Highlight the selected item has been done by NavigationView
             menuItem.setChecked(true);
-            // Set action bar title
-            setTitle(menuItem.getTitle());
-            // Close the navigation drawer
             mDrawer.closeDrawers();
             return true;
         }
