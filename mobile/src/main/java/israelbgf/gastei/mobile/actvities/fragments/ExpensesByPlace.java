@@ -1,4 +1,4 @@
-package israelbgf.gastei.mobile.fragments;
+package israelbgf.gastei.mobile.actvities.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

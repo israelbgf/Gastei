@@ -10,8 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import israelbgf.gastei.mobile.R;
-import israelbgf.gastei.mobile.fragments.ExpensesByDay;
-import israelbgf.gastei.mobile.fragments.ExpensesByPlace;
+import israelbgf.gastei.mobile.actvities.fragments.ExpensesByDay;
+import israelbgf.gastei.mobile.actvities.fragments.ExpensesByPlace;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
