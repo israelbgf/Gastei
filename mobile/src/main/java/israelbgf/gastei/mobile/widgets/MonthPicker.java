@@ -18,10 +18,10 @@ import static israelbgf.gastei.core.utils.DateUtils.yearOf;
 public class MonthPicker extends LinearLayout {
 
 
-    private ImageButton previousMonthButton;
-    private ImageButton nextMonthButton;
     private TextView currentYearView;
     private TextView currentMonthView;
+
+    private OnMonthChangeListener onMonthChangeListener = new DummyOnMonthChangeListener();
 
     int currentYear = yearOf(new Date());
     int currentMonth = monthOf(new Date());
@@ -43,18 +43,19 @@ public class MonthPicker extends LinearLayout {
 
     private void init() {
         inflate(getContext(), R.layout.widget_month_chooser, this);
-        this.previousMonthButton = (ImageButton) findViewById(R.id.previous_month);
-        this.nextMonthButton = (ImageButton) findViewById(R.id.next_month);
         this.currentYearView = (TextView) findViewById(R.id.current_year);
         this.currentMonthView = (TextView) findViewById(R.id.current_month);
 
-        this.previousMonthButton.setOnClickListener(new OnClickListener() {
+        ImageButton previousMonthButton = (ImageButton) findViewById(R.id.previous_month);
+        previousMonthButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 previousMonth();
             }
         });
-        this.nextMonthButton.setOnClickListener(new OnClickListener() {
+
+        ImageButton nextMonthButton = (ImageButton) findViewById(R.id.next_month);
+        nextMonthButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 nextMonth();
@@ -71,6 +72,7 @@ public class MonthPicker extends LinearLayout {
             currentMonth++;
         }
         updateWidget();
+        onMonthChangeListener.onChange(currentMonth, currentYear);
     }
 
     public void previousMonth() {
@@ -81,20 +83,18 @@ public class MonthPicker extends LinearLayout {
             currentMonth--;
         }
         updateWidget();
+        onMonthChangeListener.onChange(currentMonth, currentYear);
     }
 
-    public void setCurrentMonth(int month, int year) {
+    public void setCurrentMonth(int year, int month) {
+        this.currentYear = year;
         this.currentMonth = month;
-        this.currentYear = month;
         updateWidget();
+        onMonthChangeListener.onChange(currentMonth, currentYear);
     }
 
-    public int getCurrentMonth() {
-        return currentMonth;
-    }
-
-    public int getCurrentYear() {
-        return currentYear;
+    public void setOnMonthChangeListener(OnMonthChangeListener onMonthChangeListener){
+        this.onMonthChangeListener = onMonthChangeListener;
     }
 
     private void updateWidget() {
@@ -108,6 +108,29 @@ public class MonthPicker extends LinearLayout {
         calendar.set(Calendar.YEAR, currentYear);
         calendar.set(Calendar.MONTH, currentMonth - 1);
         return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
+    }
+
+    public int getCurrentYear() {
+        return currentYear;
+    }
+
+    public int getCurrentMonth() {
+        return currentMonth;
+    }
+
+
+    public interface OnMonthChangeListener {
+
+        void onChange(int currentMonth, int currentYear);
+
+    }
+
+    private class DummyOnMonthChangeListener implements OnMonthChangeListener {
+
+        @Override
+        public void onChange(int currentMonth, int currentYear) {
+
+        }
     }
 
 }

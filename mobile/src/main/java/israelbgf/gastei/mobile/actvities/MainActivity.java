@@ -12,9 +12,11 @@ import android.view.MenuItem;
 import israelbgf.gastei.mobile.R;
 import israelbgf.gastei.mobile.fragments.ExpensesByDay;
 import israelbgf.gastei.mobile.fragments.ExpensesByPlace;
+import israelbgf.gastei.mobile.widgets.MonthPicker;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
+    private MonthPicker currentDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set a Toolbar to replace the ActionBar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        currentDate = (MonthPicker) findViewById(R.id.month_picker);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
