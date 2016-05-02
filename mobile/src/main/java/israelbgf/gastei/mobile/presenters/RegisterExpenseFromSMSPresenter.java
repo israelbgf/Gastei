@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.widget.Toast;
 import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.usecases.RegisterExpenseFromSMS;
-import israelbgf.gastei.mobile.actvities.ExpenseManagementActivity;
+import israelbgf.gastei.mobile.actvities.MainActivity;
 import israelbgf.gastei.mobile.receivers.MarkAsSharedReceiver;
 
 public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMS.Presenter {
@@ -44,7 +44,7 @@ public class RegisterExpenseFromSMSPresenter implements RegisterExpenseFromSMS.P
     }
 
     private PendingIntent createShowDetailsIntent() {
-        Intent intent = new Intent(context, ExpenseManagementActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addNextIntentWithParentStack(intent);
         return stackBuilder.getPendingIntent(generateRequestCode(), PendingIntent.FLAG_UPDATE_CURRENT);
