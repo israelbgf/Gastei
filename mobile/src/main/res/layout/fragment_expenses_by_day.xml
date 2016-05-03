@@ -10,12 +10,18 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
+        <include
+                layout="@layout/view_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
         <view
                 android:paddingBottom="30dp"
                 class="android.support.v7.widget.RecyclerView"
                 android:id="@+id/list"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:layout_below="@+id/view_toolbar"
                 android:layout_centerInParent="true"/>
 
         <LinearLayout

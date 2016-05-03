@@ -3,13 +3,14 @@ package israelbgf.gastei.mobile.actvities.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import israelbgf.gastei.core.usecases.ListMonthlyExpenses;
 import israelbgf.gastei.mobile.R;
 import israelbgf.gastei.mobile.actvities.ExpenseActivity;
-import israelbgf.gastei.mobile.actvities.MainActivity;
 import israelbgf.gastei.mobile.factories.ListMonthlyExpensesFactory;
 import israelbgf.gastei.mobile.widgets.MonthPicker;
 
@@ -35,9 +36,8 @@ public class ExpensesByDay extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_expenses_by_day, container, false);
-        MainActivity activity = (MainActivity) getActivity();
 
-        currentDate = (MonthPicker) activity.findViewById(R.id.month_picker);
+        currentDate = (MonthPicker) rootView.findViewById(R.id.month_picker);
         currentDate.setOnMonthChangeListener(new MonthPicker.OnMonthChangeListener() {
             @Override
             public void onChange(int currentYear, int currentMonth) {
@@ -52,6 +52,11 @@ public class ExpensesByDay extends Fragment {
                 startActivity(new Intent(getActivity(), ExpenseActivity.class));
             }
         });
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.view_toolbar);
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         return rootView;
     }
