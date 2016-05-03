@@ -72,7 +72,7 @@ public class MonthPicker extends LinearLayout {
             currentMonth++;
         }
         updateWidget();
-        onMonthChangeListener.onChange(currentMonth, currentYear);
+        onMonthChangeListener.onChange(currentYear, currentMonth);
     }
 
     public void previousMonth() {
@@ -83,14 +83,14 @@ public class MonthPicker extends LinearLayout {
             currentMonth--;
         }
         updateWidget();
-        onMonthChangeListener.onChange(currentMonth, currentYear);
+        onMonthChangeListener.onChange(currentYear, currentMonth);
     }
 
     public void setCurrentMonth(int year, int month) {
         this.currentYear = year;
         this.currentMonth = month;
         updateWidget();
-        onMonthChangeListener.onChange(currentMonth, currentYear);
+        onMonthChangeListener.onChange(currentYear, currentMonth);
     }
 
     public void setOnMonthChangeListener(OnMonthChangeListener onMonthChangeListener){
@@ -121,14 +121,14 @@ public class MonthPicker extends LinearLayout {
 
     public interface OnMonthChangeListener {
 
-        void onChange(int currentMonth, int currentYear);
+        void onChange(int currentYear, int currentMonth);
 
     }
 
     private class DummyOnMonthChangeListener implements OnMonthChangeListener {
 
         @Override
-        public void onChange(int currentMonth, int currentYear) {
+        public void onChange(int currentYear, int currentMonth) {
 
         }
     }

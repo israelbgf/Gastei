@@ -40,8 +40,8 @@ public class ExpensesByDay extends Fragment {
         currentDate = (MonthPicker) activity.findViewById(R.id.month_picker);
         currentDate.setOnMonthChangeListener(new MonthPicker.OnMonthChangeListener() {
             @Override
-            public void onChange(int currentMonth, int currentYear) {
-                listMonthlyUsecase.list(currentMonth, currentYear);
+            public void onChange(int currentYear, int currentMonth) {
+                listMonthlyUsecase.list(currentYear, currentMonth);
             }
         });
 
