@@ -10,11 +10,13 @@
                     android:title="by Place"/>
         </item>
 
-        <item android:title="Options">
+        <item android:title="Extras">
             <menu>
-                <item
+                <item android:id="@+id/import_sms"
                         android:title="Import SMSs"/>
-                <item
+                <item android:id="@+id/preferences"
+                        android:title="Preferences"/>
+                <item android:id="@+id/about"
                         android:title="About"/>
             </menu>
         </item>

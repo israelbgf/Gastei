@@ -14,6 +14,7 @@ import israelbgf.gastei.core.usecases.RegisterExpenseFromSMS;
 import israelbgf.gastei.mobile.R;
 import israelbgf.gastei.mobile.actvities.fragments.ExpensesByDay;
 import israelbgf.gastei.mobile.actvities.fragments.ExpensesByPlace;
+import israelbgf.gastei.mobile.factories.ImportNewExpensesFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
     public class MenuListener implements NavigationView.OnNavigationItemSelectedListener {
         @Override
         public boolean onNavigationItemSelected(MenuItem menuItem) {
-            // Create a new fragment and specify the fragment to show based on nav item clicked
-            Fragment fragment = null;
+            Fragment fragment;
             switch (menuItem.getItemId()) {
                 case R.id.expenses_by_day:
                     fragment = new ExpensesByDay();
@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.expenses_by_place:
                     fragment = new ExpensesByPlace();
                     break;
+                case R.id.import_sms:
+                    ImportNewExpensesFactory.make(MainActivity.this).importExisting(messagesFromPhone());
+                    return true;
                 default:
                     return true;
             }
