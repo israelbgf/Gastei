@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
 
-        <activity
+        <activity android:theme="@style/GasteiThemeWithActionBar"
             android:name=".actvities.ExpenseActivity">
         </activity>
 

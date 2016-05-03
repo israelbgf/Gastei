@@ -9,6 +9,11 @@
 
     </style>
 
+    <style name="GasteiThemeWithActionBar" parent="MyMaterialTheme.Base">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowNoTitle">true</item>
         <item name="android:windowTranslucentStatus">true</item>
