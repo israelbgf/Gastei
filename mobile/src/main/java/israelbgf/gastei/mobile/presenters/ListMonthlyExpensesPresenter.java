@@ -66,7 +66,7 @@ public class ListMonthlyExpensesPresenter implements Presenter {
         ExpenseAdapter expenseAdapter = new ExpenseAdapter(activity, struct.dailyExpenses.values());
         SectionedRecyclerViewAdapter sectionedAdapter = new SectionedRecyclerViewAdapter(
                 activity,
-                R.layout.expense_section,
+                R.layout.view_expense_section,
                 R.id.section_text, expenseAdapter);
         sectionedAdapter.setSections(asAGroupOf(struct.dailyExpenses));
         return sectionedAdapter;
@@ -112,7 +112,7 @@ public class ListMonthlyExpensesPresenter implements Presenter {
 
         @Override
         public ExpenseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            final View view = LayoutInflater.from(context).inflate(R.layout.expense_item, parent, false);
+            final View view = LayoutInflater.from(context).inflate(R.layout.view_expense_item, parent, false);
             return new ExpenseHolder(view);
         }
 

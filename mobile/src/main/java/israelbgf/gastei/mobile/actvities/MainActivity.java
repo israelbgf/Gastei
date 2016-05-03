@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private DrawerLayout mDrawer;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +28,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Set a Toolbar to replace the ActionBar.
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.view_toolbar);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Find our drawer view
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer);
+        drawer = (DrawerLayout) findViewById(R.id.view_drawer);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
         MenuListener menuListener = new MenuListener();
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         // The action bar home/up action should open or close the drawer.
         switch (item.getItemId()) {
             case android.R.id.home:
-                mDrawer.openDrawer(GravityCompat.START);
+                drawer.openDrawer(GravityCompat.START);
                 return true;
         }
 
@@ -75,15 +75,15 @@ public class MainActivity extends AppCompatActivity {
             fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
 
             menuItem.setChecked(true);
-            mDrawer.closeDrawers();
+            drawer.closeDrawers();
             return true;
         }
     }
 
     private List<String> messagesFromPhone() {
-        String[] selection = new String[] { RegisterExpenseFromSMS.BRADESCO_SMS_NUMBER };
+        String[] selection = new String[]{RegisterExpenseFromSMS.BRADESCO_SMS_NUMBER};
         Cursor cursor = getContentResolver().query(
-                Uri.parse("content://sms/inbox"), new String[] {"body"}, "address=?", selection, null);
+                Uri.parse("content://sms/inbox"), new String[]{"body"}, "address=?", selection, null);
 
         List<String> messages = new ArrayList<>();
         if (cursor.moveToFirst()) {

@@ -34,7 +34,7 @@ public class ExpensesByDay extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.expenses_by_day, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_expenses_by_day, container, false);
         MainActivity activity = (MainActivity) getActivity();
 
         currentDate = (MonthPicker) activity.findViewById(R.id.month_picker);

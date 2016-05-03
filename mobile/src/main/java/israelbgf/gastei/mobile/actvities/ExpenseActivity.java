@@ -32,7 +32,7 @@ public class ExpenseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.expense);
+        setContentView(R.layout.activity_expense);
         findViews();
         setupViews();
     }

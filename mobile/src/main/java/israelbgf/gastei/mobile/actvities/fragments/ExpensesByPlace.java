@@ -22,7 +22,7 @@ public class ExpensesByPlace extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.expenses_by_place, container, false);
+        return inflater.inflate(R.layout.fragment_expenses_by_place, container, false);
     }
 
 }
