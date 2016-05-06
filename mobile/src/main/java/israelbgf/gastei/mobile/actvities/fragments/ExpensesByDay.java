@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import israelbgf.gastei.core.usecases.ListMonthlyExpenses;
+import israelbgf.gastei.core.values.Month;
 import israelbgf.gastei.mobile.R;
 import israelbgf.gastei.mobile.actvities.ExpenseActivity;
 import israelbgf.gastei.mobile.factories.ListMonthlyExpensesFactory;
@@ -40,8 +41,8 @@ public class ExpensesByDay extends Fragment {
         currentDate = (MonthPicker) rootView.findViewById(R.id.month_picker);
         currentDate.setOnMonthChangeListener(new MonthPicker.OnMonthChangeListener() {
             @Override
-            public void onChange(int currentYear, int currentMonth) {
-                listMonthlyUsecase.list(currentYear, currentMonth);
+            public void onChange(Month month) {
+                listMonthlyUsecase.list(month.year, month.month);
             }
         });
 

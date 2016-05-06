@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-class GenerateMonthOverviewReport {
+public class GenerateMonthOverviewReport {
 
     private final ExpenseGateway gateway;
     private final Presenter presenter;
@@ -38,8 +38,8 @@ class GenerateMonthOverviewReport {
 
         class MonthOverviewReport {
 
-            double totalAmount = 0;
-            Map<String, Double> expensesByPlace = new HashMap<>();
+            public double totalAmount = 0;
+            public Map<String, Double> expensesByPlace = new HashMap<>();
 
             @Override
             public String toString() {

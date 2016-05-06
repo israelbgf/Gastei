@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import israelbgf.gastei.core.values.Month;
 import israelbgf.gastei.mobile.R;
 
 import java.util.Calendar;
@@ -72,7 +73,7 @@ public class MonthPicker extends LinearLayout {
             currentMonth++;
         }
         updateWidget();
-        onMonthChangeListener.onChange(currentYear, currentMonth);
+        onMonthChangeListener.onChange(new Month(currentYear, currentMonth));
     }
 
     public void previousMonth() {
@@ -83,14 +84,14 @@ public class MonthPicker extends LinearLayout {
             currentMonth--;
         }
         updateWidget();
-        onMonthChangeListener.onChange(currentYear, currentMonth);
+        onMonthChangeListener.onChange(new Month(currentYear, currentMonth));
     }
 
     public void setCurrentMonth(int year, int month) {
         this.currentYear = year;
         this.currentMonth = month;
         updateWidget();
-        onMonthChangeListener.onChange(currentYear, currentMonth);
+        onMonthChangeListener.onChange(new Month(currentYear, currentMonth));
     }
 
     public void setOnMonthChangeListener(OnMonthChangeListener onMonthChangeListener){
@@ -110,10 +111,16 @@ public class MonthPicker extends LinearLayout {
         return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
     }
 
+    public Month getMonth(){
+        return new Month(currentYear, currentMonth);
+    }
+
+    @Deprecated
     public int getCurrentYear() {
         return currentYear;
     }
 
+    @Deprecated
     public int getCurrentMonth() {
         return currentMonth;
     }
@@ -121,14 +128,14 @@ public class MonthPicker extends LinearLayout {
 
     public interface OnMonthChangeListener {
 
-        void onChange(int currentYear, int currentMonth);
+        void onChange(Month newMonth);
 
     }
 
     private class DummyOnMonthChangeListener implements OnMonthChangeListener {
 
         @Override
-        public void onChange(int currentYear, int currentMonth) {
+        public void onChange(Month newMonth) {
 
         }
     }
