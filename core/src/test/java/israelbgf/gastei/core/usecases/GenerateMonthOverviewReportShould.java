@@ -4,12 +4,15 @@ package israelbgf.gastei.core.usecases;
 import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 import israelbgf.gastei.core.usecases.GenerateMonthOverviewReport.Presenter;
+import israelbgf.gastei.core.usecases.GenerateMonthOverviewReport.Presenter.ReportItem;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.Collections;
 
 import static israelbgf.gastei.core.values.Month.month;
 import static java.util.Arrays.asList;
@@ -38,7 +41,7 @@ public class GenerateMonthOverviewReportShould {
             allowing(gateway).retrieveBy(month(2016, 1));
             will(returnValue(emptyList()));
 
-            oneOf(presenter).display(emptyOverviewReport());
+            oneOf(presenter).display(0, Collections.<ReportItem>emptyList());
         }});
 
         usecase.generateFor(month(2016, 1));
@@ -50,7 +53,7 @@ public class GenerateMonthOverviewReportShould {
             allowing(gateway).retrieveBy(month(2016, 1));
             will(returnValue(asList(new Expense(10, "Place"))));
 
-            oneOf(presenter).display(overviewReportWith("Place", 10));
+            oneOf(presenter).display(10.0, asList(new ReportItem("Place", 10.0)));
         }});
 
         usecase.generateFor(month(2016, 1));
@@ -65,7 +68,7 @@ public class GenerateMonthOverviewReportShould {
                     new Expense(20, "Place")
             )));
 
-            oneOf(presenter).display(overviewReportWith("Place", 30));
+            oneOf(presenter).display(30.0, asList(new ReportItem("Place", 30.0)));
         }});
 
         usecase.generateFor(month(2016, 1));
@@ -82,35 +85,31 @@ public class GenerateMonthOverviewReportShould {
                     new Expense(30, "Another Place")
             )));
 
-            oneOf(presenter).display(overviewReportWith(
-                    "Place", 5,
-                    "Another Place", 50
+            oneOf(presenter).display(55, asList(
+                    new ReportItem("Another Place", 50.0),
+                    new ReportItem("Place", 5.0)
             ));
         }});
 
         usecase.generateFor(month(2016, 1));
     }
 
-    private Presenter.MonthOverviewReport overviewReportWith(String firstPlace, double firstPlaceAmount,
-                                                                               String secondPlace, double secondPlaceAmount) {
+    @Test
+    public void descendingOrderOfAmounts() {
+        context.checking(new Expectations() {{
+            allowing(gateway).retrieveBy(month(2016, 1));
+            will(returnValue(asList(
+                    new Expense(10, "Last"),
+                    new Expense(100, "First")
+            )));
 
-        Presenter.MonthOverviewReport report = new Presenter.MonthOverviewReport();
-        report.expensesByPlace.put(firstPlace, firstPlaceAmount);
-        report.expensesByPlace.put(secondPlace, secondPlaceAmount);
-        report.totalAmount = firstPlaceAmount + secondPlaceAmount;
-        return report;
+            oneOf(presenter).display(110, asList(
+                    new ReportItem("First", 100.0),
+                    new ReportItem("Last", 10.0)
+            ));
+        }});
 
-    }
-
-    private Presenter.MonthOverviewReport overviewReportWith(String place, double amount) {
-        Presenter.MonthOverviewReport report = new Presenter.MonthOverviewReport();
-        report.expensesByPlace.put(place, amount);
-        report.totalAmount = amount;
-        return report;
-    }
-
-    private Presenter.MonthOverviewReport emptyOverviewReport() {
-        return new Presenter.MonthOverviewReport();
+        usecase.generateFor(month(2016, 1));
     }
 
 }

@@ -19,7 +19,6 @@ import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class ExpensesByPlace extends Fragment implements GenerateMonthOverviewReport.Presenter {
 
@@ -70,16 +69,16 @@ public class ExpensesByPlace extends Fragment implements GenerateMonthOverviewRe
     }
 
     @Override
-    public void display(MonthOverviewReport report) {
-        total.setText(CURRENCY_FORMATTER.format(report.totalAmount));
-        adapter.setItems(new LinkedList<>(report.expensesByPlace.entrySet()));
+    public void display(double totalAmount, List<ReportItem> reportItems) {
+        total.setText(CURRENCY_FORMATTER.format(totalAmount));
+        adapter.setItems(reportItems);
         adapter.notifyDataSetChanged();
     }
 
     public static class MostPaidPlacesAdapter extends
             RecyclerView.Adapter<MostPaidPlacesAdapter.ViewHolder> {
 
-        private List<Map.Entry<String, Double>> items = new LinkedList<>();
+        private List<ReportItem> items = new LinkedList<>();
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -90,9 +89,9 @@ public class ExpensesByPlace extends Fragment implements GenerateMonthOverviewRe
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            Map.Entry<String, Double> entry = items.get(position);
-            holder.place.setText(entry.getKey());
-            holder.amount.setText(CURRENCY_FORMATTER.format(entry.getValue()));
+            ReportItem entry = items.get(position);
+            holder.place.setText(entry.place);
+            holder.amount.setText(CURRENCY_FORMATTER.format(entry.amount));
         }
 
         @Override
@@ -100,7 +99,7 @@ public class ExpensesByPlace extends Fragment implements GenerateMonthOverviewRe
             return items.size();
         }
 
-        public void setItems(LinkedList<Map.Entry<String, Double>> items) {
+        public void setItems(List<ReportItem> items) {
             this.items = items;
         }
 

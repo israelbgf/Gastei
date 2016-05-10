@@ -4,9 +4,7 @@ import israelbgf.gastei.core.entities.Expense;
 import israelbgf.gastei.core.gateways.ExpenseGateway;
 import israelbgf.gastei.core.values.Month;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class GenerateMonthOverviewReport {
 
@@ -19,33 +17,55 @@ public class GenerateMonthOverviewReport {
     }
 
     public void generateFor(Month forMonth) {
-        Presenter.MonthOverviewReport report = new Presenter.MonthOverviewReport();
+        Map<String, Double> expensesByPlace = new HashMap<>();
+        double totalAmount = 0;
         for (Expense expense : gateway.retrieveBy(forMonth)) {
             String place = expense.getPlace();
-            Double amountSoFarForThisPlace = report.expensesByPlace.get(place);
+            Double amountSoFarForThisPlace = expensesByPlace.get(place);
 
             if (amountSoFarForThisPlace == null)
-                report.expensesByPlace.put(place, expense.getAmount());
+                expensesByPlace.put(place, expense.getAmount());
             else
-                report.expensesByPlace.put(place, amountSoFarForThisPlace + expense.getAmount());
-            report.totalAmount += expense.getAmount();
+                expensesByPlace.put(place, amountSoFarForThisPlace + expense.getAmount());
+            totalAmount += expense.getAmount();
         }
-        presenter.display(report);
+        presenter.display(totalAmount, buildOrderedListOf(expensesByPlace));
+    }
+
+    private List<Presenter.ReportItem> buildOrderedListOf(Map<String, Double> expensesByPlace) {
+        List<Presenter.ReportItem> orderedItems = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : expensesByPlace.entrySet()) {
+            orderedItems.add(new Presenter.ReportItem(entry.getKey(), entry.getValue()));
+        }
+
+        Collections.sort(orderedItems, new Comparator<Presenter.ReportItem>() {
+            @Override
+            public int compare(Presenter.ReportItem o1, Presenter.ReportItem o2) {
+                return o2.amount.compareTo(o1.amount);
+            }
+        });
+
+        return orderedItems;
     }
 
     public interface Presenter {
-        void display(MonthOverviewReport report);
 
-        class MonthOverviewReport {
+        void display(double totalAmount, List<ReportItem> reportItems);
 
-            public double totalAmount = 0;
-            public Map<String, Double> expensesByPlace = new HashMap<>();
+        class ReportItem {
+            public String place;
+            public Double amount;
+
+            public ReportItem(String place, Double amount) {
+                this.place = place;
+                this.amount = amount;
+            }
 
             @Override
             public String toString() {
-                return "MonthOverviewReport{" +
-                        "totalAmount=" + totalAmount +
-                        ", expensesByPlace=" + expensesByPlace +
+                return "ReportItem{" +
+                        "place='" + place + '\'' +
+                        ", amount=" + amount +
                         '}';
             }
 
@@ -53,14 +73,14 @@ public class GenerateMonthOverviewReport {
             public boolean equals(Object o) {
                 if (this == o) return true;
                 if (o == null || getClass() != o.getClass()) return false;
-                MonthOverviewReport that = (MonthOverviewReport) o;
-                return Double.compare(that.totalAmount, totalAmount) == 0 &&
-                        Objects.equals(expensesByPlace, that.expensesByPlace);
+                ReportItem that = (ReportItem) o;
+                return Objects.equals(place, that.place) &&
+                        Objects.equals(amount, that.amount);
             }
 
             @Override
             public int hashCode() {
-                return Objects.hash(totalAmount, expensesByPlace);
+                return Objects.hash(place, amount);
             }
         }
 
